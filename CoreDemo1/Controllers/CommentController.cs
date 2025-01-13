@@ -1,4 +1,5 @@
 ﻿using BusinessLayer.Abstract;
+using EntityLayer.Concrete;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CoreDemo1.Controllers
@@ -14,11 +15,20 @@ namespace CoreDemo1.Controllers
 		{
 			return View();
 		}
-		public PartialViewResult PartialAddComment()
-		{
-			return PartialView();
-		}
-		public PartialViewResult CommentListByBlog(int id)
+        [HttpGet]
+        public PartialViewResult PartialAddComment()
+        {
+            return PartialView();
+        }
+        [HttpPost]
+        public async  Task<PartialViewResult> PartialAddComment(Comment p)
+        {
+            p.CommentDate = DateTime.UtcNow;
+            p.BlogID = 2;
+             await _commentService.TAddAsync(p);
+            return PartialView();
+        }
+        public PartialViewResult CommentListByBlog(int id)
 		{
 			var values=_commentService.GetListByBlogId(id);
 			return PartialView(values);

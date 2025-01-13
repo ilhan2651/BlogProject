@@ -1,0 +1,12 @@
+﻿<div class="tech-btm">
+    <h4>Mail bültenimize abone olun</h4>
+    <p>Teknoloji, yazılım ve diğer bloglar...</p>
+    <form action="/Newsletter/SubscribeMail" id="newsletterForm" method="post">
+        <input type="email" id="email" placeholder="Email" required="">
+        <input type="submit" value="Abone Ol">
+    </form>
+    @if(ViewBag.Message != null)
+    {
+        <p style="color : green;">@ViewBag.Message</p>
+    }
+</div>

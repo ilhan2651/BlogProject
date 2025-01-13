@@ -16,7 +16,7 @@ namespace DataAccessLayer.Migrations
                 name: "Abouts",
                 columns: table => new
                 {
-                    AboutId = table.Column<int>(type: "integer", nullable: false)
+                    AboutID = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     AboutDetails1 = table.Column<string>(type: "text", nullable: false),
                     AboutDetails2 = table.Column<string>(type: "text", nullable: false),
@@ -27,25 +27,7 @@ namespace DataAccessLayer.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Abouts", x => x.AboutId);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Blogs",
-                columns: table => new
-                {
-                    BlogID = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    BlogTitle = table.Column<string>(type: "text", nullable: false),
-                    BlogContent = table.Column<string>(type: "text", nullable: false),
-                    BlogThumbnailImage = table.Column<string>(type: "text", nullable: false),
-                    BlogImage = table.Column<string>(type: "text", nullable: false),
-                    BlogCreateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    BlogStatus = table.Column<bool>(type: "boolean", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Blogs", x => x.BlogID);
+                    table.PrimaryKey("PK_Abouts", x => x.AboutID);
                 });
 
             migrationBuilder.CreateTable(
@@ -61,22 +43,6 @@ namespace DataAccessLayer.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Categories", x => x.CategoryID);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Comments",
-                columns: table => new
-                {
-                    CommentID = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    CommentUserName = table.Column<string>(type: "text", nullable: false),
-                    CommentTitle = table.Column<string>(type: "text", nullable: false),
-                    CommentContent = table.Column<string>(type: "text", nullable: false),
-                    CommentDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Comments", x => x.CommentID);
                 });
 
             migrationBuilder.CreateTable(
@@ -107,13 +73,81 @@ namespace DataAccessLayer.Migrations
                     WriterImage = table.Column<string>(type: "text", nullable: false),
                     WriterMail = table.Column<string>(type: "text", nullable: false),
                     WriterPassword = table.Column<string>(type: "text", nullable: false),
-                    WriterStatus = table.Column<string>(type: "text", nullable: false),
-                    Status = table.Column<string>(type: "text", nullable: false)
+                    WriterStatus = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Writers", x => x.WriterID);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "Blogs",
+                columns: table => new
+                {
+                    BlogID = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    BlogTitle = table.Column<string>(type: "text", nullable: false),
+                    BlogContent = table.Column<string>(type: "text", nullable: true),
+                    BlogThumbnailImage = table.Column<string>(type: "text", nullable: true),
+                    BlogImage = table.Column<string>(type: "text", nullable: true),
+                    BlogCreateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    BlogStatus = table.Column<bool>(type: "boolean", nullable: false),
+                    CategoryID = table.Column<int>(type: "integer", nullable: false),
+                    WriterID = table.Column<int>(type: "integer", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Blogs", x => x.BlogID);
+                    table.ForeignKey(
+                        name: "FK_Blogs_Categories_CategoryID",
+                        column: x => x.CategoryID,
+                        principalTable: "Categories",
+                        principalColumn: "CategoryID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Blogs_Writers_WriterID",
+                        column: x => x.WriterID,
+                        principalTable: "Writers",
+                        principalColumn: "WriterID");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Comments",
+                columns: table => new
+                {
+                    CommentID = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    CommentUserName = table.Column<string>(type: "text", nullable: false),
+                    CommentTitle = table.Column<string>(type: "text", nullable: false),
+                    CommentContent = table.Column<string>(type: "text", nullable: false),
+                    CommentDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    BlogID = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Comments", x => x.CommentID);
+                    table.ForeignKey(
+                        name: "FK_Comments_Blogs_BlogID",
+                        column: x => x.BlogID,
+                        principalTable: "Blogs",
+                        principalColumn: "BlogID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Blogs_CategoryID",
+                table: "Blogs",
+                column: "CategoryID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Blogs_WriterID",
+                table: "Blogs",
+                column: "WriterID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Comments_BlogID",
+                table: "Comments",
+                column: "BlogID");
         }
 
         /// <inheritdoc />
@@ -123,16 +157,16 @@ namespace DataAccessLayer.Migrations
                 name: "Abouts");
 
             migrationBuilder.DropTable(
-                name: "Blogs");
-
-            migrationBuilder.DropTable(
-                name: "Categories");
-
-            migrationBuilder.DropTable(
                 name: "Comments");
 
             migrationBuilder.DropTable(
                 name: "Contacts");
+
+            migrationBuilder.DropTable(
+                name: "Blogs");
+
+            migrationBuilder.DropTable(
+                name: "Categories");
 
             migrationBuilder.DropTable(
                 name: "Writers");

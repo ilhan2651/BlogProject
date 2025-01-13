@@ -1,15 +1,21 @@
 using BusinessLayer.Abstract;
 using BusinessLayer.Concrete;
+using BusinessLayer.ValidationRules;
 using DataAccessLayer.BaseRepository.Abstract;
 using DataAccessLayer.BaseRepository.Concrete;
 using DataAccessLayer.Repositories.Abstract;
 using DataAccessLayer.Repositories.Concrete;
+using EntityLayer.Concrete;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<BlogProjectContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("SqlConnection")));
+builder.Services.AddControllersWithViews().AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Program>());
+builder.Services.AddTransient<IValidator<Writer>, WriterValidator>();
 
 builder.Services.AddScoped(typeof(IGenericService<>), typeof(GenericManager<>));
 builder.Services.AddScoped<IAboutRepository, AboutRepository>();
@@ -31,6 +37,12 @@ builder.Services.AddScoped<IWriterRepository, WriterRepository>();
 builder.Services.AddScoped<IWriterService, WriterManager>();
 
 
+builder.Services.AddScoped<INewsletterRepository, NewsletterRepository>();
+builder.Services.AddScoped<INewsletterService , NewsletterManager>();
+
+
+
+
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -43,7 +55,7 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-
+app.UseStatusCodePagesWithReExecute("/ErrorPage/Error1","?code={0}");
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
