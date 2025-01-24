@@ -27,5 +27,12 @@ namespace DataAccessLayer.Repositories.Concrete
 		{
 			return await _context.Blogs.Include(b => b.Category).ToListAsync();
 		}
-	}
+
+        public async Task<List<Blog>> GetListWithCategoryByWriter(int id)
+        {
+            return await _context.Blogs
+                .Include(b => b.Category)
+                .Where(b => b.WriterID == id).ToListAsync();
+        }
+    }
 }

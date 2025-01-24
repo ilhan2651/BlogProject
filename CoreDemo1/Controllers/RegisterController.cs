@@ -24,14 +24,9 @@ namespace CoreDemo1.Controllers
         public async Task<IActionResult> Index(Writer w)
         {
 
-            var validationResult=await _validator.ValidateAsync(w);
-            if (!validationResult.IsValid)
+            if (!ModelState.IsValid)
             {
-                foreach (var error in validationResult.Errors)
-                {
-                    ModelState.AddModelError(error.PropertyName,error.ErrorMessage);
-                }
-                return View();
+                return View(w);  // Hataları otomatik kontrol eder
             }
 
             w.WriterStatus = true;

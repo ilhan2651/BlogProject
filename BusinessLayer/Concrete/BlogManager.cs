@@ -26,10 +26,24 @@ namespace BusinessLayer.Concrete
 		{
             return await _blogRepository.GetFilteredList(w => w.WriterID == id);
 		}
+        public async Task<List<Blog>> GetListWithCategoryByWriterBm(int id)
+        {
+            return await _blogRepository.GetListWithCategoryByWriter(id); 
+        }
 
 		public async Task<List<Blog>> GetBlogListWithCategory()
 		{
 		 return await _blogRepository.GetListWithCategory();
 		}
-	}
+        public  async Task<List<Blog>> GetLastThreeBlog()
+        {
+            var allBlogs = await _blogRepository.ListAll();
+            return allBlogs
+                .OrderByDescending(b=>b.BlogCreateDate)
+                .Take(3)
+                .ToList();
+        }
+
+        
+    }
 }

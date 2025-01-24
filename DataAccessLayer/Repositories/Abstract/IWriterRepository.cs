@@ -10,5 +10,7 @@ namespace DataAccessLayer.Repositories.Abstract
 {
     public interface IWriterRepository : IGenericRepository<Writer>
     {
-    }
+
+
+	}
 }

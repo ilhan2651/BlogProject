@@ -1,0 +1,31 @@
+﻿@model BlogUpdateViewModel
+@{
+    ViewData["Title"] = "EditBlog";
+    Layout = "~/Views/Shared/WriterLayout.cshtml";
+}
+
+<h1>Blog Düzenleme Sayfası</h1>
+<br />
+@using(Html.BeginForm("EditBlog","Blog",FormMethod.Post))
+{
+    @Html.Label("Blog ID")
+    @Html.TextBoxFor(b=>b.BlogID,new {@class ="form-control"})
+    <br />
+    @Html.Label("Blog Başlığı")
+    @Html.TextBoxFor(b => b.BlogTitle, new { @class = "form-control" })
+    <br />
+    @Html.Label("Blog ThumbNail Url")
+    @Html.TextBoxFor(b => b.BlogThumbnailImage, new { @class = "form-control" })
+    <br />
+    @Html.Label("Blog Görseli")
+    @Html.TextBoxFor(b => b.BlogImage, new { @class = "form-control" })
+    <br />
+    @Html.Label("Blog Kategori")
+    @Html.DropDownListFor(b => b.CategoryID,Model.Categories,"Kategori Seçiniz", new { @class = "form-control" })
+    <br />
+    @Html.Label("Blog İçeriği")
+    @Html.TextAreaFor(b => b.BlogContent,10,3, new { @class = "form-control" })
+    <br />
+    <button class="btn btn-success">Güncelle</button>
+
+}

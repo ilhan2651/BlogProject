@@ -12,5 +12,6 @@ namespace DataAccessLayer.Repositories.Abstract
     {
         Task<List<Blog>> GetListWithCategory();
         Task<List<Blog>> GetListByBlogID(int id);
+        Task<List<Blog>> GetListWithCategoryByWriter(int id);
     }
 }

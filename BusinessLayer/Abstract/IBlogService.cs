@@ -12,5 +12,8 @@ namespace BusinessLayer.Abstract
         Task<List<Blog>> GetBlogListWithCategory();
         Task<List<Blog>> GetBlogListByCategoryId(int id);
         Task<List<Blog>> GetBlogListByWriter(int id);
+        Task<List<Blog>> GetLastThreeBlog();
+
+        Task<List<Blog>> GetListWithCategoryByWriterBm(int id);
     }
 }

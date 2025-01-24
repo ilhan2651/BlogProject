@@ -8,13 +8,23 @@ using DataAccessLayer.Repositories.Concrete;
 using EntityLayer.Concrete;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<BlogProjectContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("SqlConnection")));
-builder.Services.AddControllersWithViews().AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Program>());
+builder.Services.AddControllersWithViews();
+
+builder.Services.AddFluentValidationAutoValidation()  // Otomatik ModelState validasyonu
+                .AddFluentValidationClientsideAdapters();  // Client-side validasyon
+
+builder.Services.AddValidatorsFromAssemblyContaining<BlogValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<WriterValidator>();
+
 builder.Services.AddTransient<IValidator<Writer>, WriterValidator>();
 
 builder.Services.AddScoped(typeof(IGenericService<>), typeof(GenericManager<>));
@@ -40,13 +50,33 @@ builder.Services.AddScoped<IWriterService, WriterManager>();
 builder.Services.AddScoped<INewsletterRepository, NewsletterRepository>();
 builder.Services.AddScoped<INewsletterService , NewsletterManager>();
 
+builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
+builder.Services.AddScoped<INotificationService, NotificationManager>();
+
+builder.Services.AddScoped<IMessageRepository, MessageRepository>();
+builder.Services.AddScoped<IMessageService, MessageManager>();
 
 
+builder.Services.AddControllersWithViews(options =>
+{
+	var policy = new AuthorizationPolicyBuilder()
+					  .RequireAuthenticatedUser()
+					  .Build();
+	options.Filters.Add(new AuthorizeFilter(policy));
+});
+builder.Services.AddMvc();
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(z =>
+    {
+        z.LoginPath = "/Login/Index";
+    });
 
-
+builder.Services.AddSession();
+builder.Services.AddHttpContextAccessor();
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

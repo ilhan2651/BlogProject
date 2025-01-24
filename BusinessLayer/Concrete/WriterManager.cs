@@ -17,5 +17,6 @@ namespace BusinessLayer.Concrete
             _writerRepository = writerRepository;
         }
 
-    }
+		
+	}
 }
