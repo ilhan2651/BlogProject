@@ -1,4 +1,5 @@
 ﻿using DataAccessLayer.BaseRepository.Abstract;
+using DataAccessLayer.BaseRepository.Concrete;
 using EntityLayer.Concrete;
 using System;
 using System.Collections.Generic;
@@ -8,10 +9,8 @@ using System.Threading.Tasks;
 
 namespace DataAccessLayer.Repositories.Abstract
 {
-    public interface ICategoryRepository : IGenericRepository<Category>
+    public interface IAdminRepository : IGenericRepository<Admin>
     {
-        void Attach(Category category);
-
-        Task<List<Category>> GetAllCategories();
+        Task<string> GetAdminName(int id);
     }
 }

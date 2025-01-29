@@ -85,7 +85,6 @@ namespace CoreDemo1.Controllers
 
         }
         [HttpPost]
-        [AllowAnonymous]
         public async Task<IActionResult> WriterAdd(AddProfileImage api)
         {
             Writer w = new Writer();

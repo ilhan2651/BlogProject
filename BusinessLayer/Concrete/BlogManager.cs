@@ -44,6 +44,6 @@ namespace BusinessLayer.Concrete
                 .ToList();
         }
 
-        
+       
     }
 }

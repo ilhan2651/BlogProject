@@ -1,6 +1,7 @@
 ﻿using DataAccessLayer.BaseRepository.Concrete;
 using DataAccessLayer.Repositories.Abstract;
 using EntityLayer.Concrete;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,16 @@ namespace DataAccessLayer.Repositories.Concrete
         {
             _context    = context;
 
+        }
+        public void Attach(Category category) 
+        {
+            _context.Categories.Attach(category);
+        }
+
+        public async Task<List<Category>> GetAllCategories()
+        {
+            return await _context.Categories
+                .Include(b => b.Blogs).ToListAsync();
         }
     }
 }

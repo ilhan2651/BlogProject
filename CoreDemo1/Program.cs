@@ -10,6 +10,7 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
@@ -24,6 +25,9 @@ builder.Services.AddFluentValidationAutoValidation()  // Otomatik ModelState val
 
 builder.Services.AddValidatorsFromAssemblyContaining<BlogValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<WriterValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<CategoryValidator>();
+
+
 
 builder.Services.AddTransient<IValidator<Writer>, WriterValidator>();
 
@@ -55,6 +59,11 @@ builder.Services.AddScoped<INotificationService, NotificationManager>();
 
 builder.Services.AddScoped<IMessageRepository, MessageRepository>();
 builder.Services.AddScoped<IMessageService, MessageManager>();
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.SuppressModelStateInvalidFilter = true;
+});
+
 
 
 builder.Services.AddControllersWithViews(options =>
@@ -93,8 +102,18 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+app.UseEndpoints(endpoints =>
+{
+    // Area route
+    endpoints.MapControllerRoute(
+        name: "areas",
+        pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
+    // Default route
+    endpoints.MapControllerRoute(
+        name: "default",
+        pattern: "{controller=Home}/{action=Index}/{id?}");
+
+   
+});
 app.Run();

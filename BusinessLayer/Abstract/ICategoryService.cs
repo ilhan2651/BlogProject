@@ -9,5 +9,9 @@ namespace BusinessLayer.Abstract
 {
     public interface ICategoryService : IGenericService<Category>
     {
+        Task SetCategoryStatus(int id, bool status);
+        void Attach(Category category);
+        Task<List<Category>> GetAllCategoriesAsync();
+
     }
 }

@@ -1,6 +1,5 @@
 ﻿using BusinessLayer.Abstract;
 using Microsoft.AspNetCore.Mvc;
-
 namespace CoreDemo1.Controllers
 {
     public class CategoryController : Controller

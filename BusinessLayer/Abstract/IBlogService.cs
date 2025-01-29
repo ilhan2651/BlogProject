@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace BusinessLayer.Abstract
 {
    public interface IBlogService : IGenericService<Blog>

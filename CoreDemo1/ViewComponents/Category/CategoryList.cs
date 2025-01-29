@@ -13,7 +13,7 @@ namespace CoreDemo1.ViewComponents.Category
         }
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var values = await _categoryService.TListAllAsync();
+            var values = await _categoryService.GetAllCategoriesAsync();
             return View( values );
         }
     }

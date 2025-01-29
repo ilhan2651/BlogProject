@@ -34,5 +34,6 @@ namespace DataAccessLayer.Repositories.Concrete
                 .Include(b => b.Category)
                 .Where(b => b.WriterID == id).ToListAsync();
         }
+       
     }
 }

@@ -16,5 +16,26 @@ namespace BusinessLayer.Concrete
         {
            _categoryRepository  = categoryRepository;   
         }
+
+        public async Task SetCategoryStatus(int id, bool status)
+        {
+            var category = await _categoryRepository.GetById(id);
+            if (category == null)
+            {
+                throw new Exception("Category bulunamadı");
+            }
+            category.CategoryStatus = status;
+            await _categoryRepository.Update(category);
+
+        }
+        public void Attach(Category category) // Attach metodu
+        {
+            _categoryRepository.Attach(category);
+        }
+
+        public async Task<List<Category>> GetAllCategoriesAsync()
+        {
+            return await _categoryRepository.GetAllCategories();
+        }
     }
 }
