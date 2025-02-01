@@ -1,0 +1,238 @@
+﻿@{
+    ViewData["Title"] = "Yazar İşlemleri";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+}
+
+<h1 class="text-center my-3">Yazar İşlemleri</h1>
+
+<div class="container">
+   
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card shadow p-3 mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                <h4 class="card-title mb-0">📃 Yazar Listesi</h4>
+                    <button type="button" id="btngetlist" class="btn btn-primary mx-1">📜 Yazar Listesi</button>
+                </div>
+                <div id="writerlist" class="card-body">
+                    <p class="text-muted">Buraya yazar listesi gelecek...</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card shadow p-3 mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                <h4 class="card-title">🔍 Yazar Getir</h4>
+                    <button type="button" id="btngetbyid" class="btn btn-success mx-1">🔍 Yazar Getir</button>
+                </div>
+                <input type="text" id="writerid" placeholder="Yazar ID girin" class="form-control mb-2">
+                <div id="writerget" class="card-body">
+                    <p class="text-muted">Buraya yazar bilgisi gelecek...</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card shadow p-3 mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                <h4 class="card-title">➕ Yazar Ekle</h4>
+                    <button type="button" id="btnaddwriter" class="btn btn-info mx-1">➕ Yazar Ekle</button>
+                </div>
+                <input type="text" class="form-control mb-2" id="txtwritername" placeholder="Yazar Adı">
+                <input type="text" class="form-control mb-2" id="txtwritermail" placeholder="Yazar Maili">
+                <input type="text" class="form-control mb-2" id="txtwriterpassword1" placeholder="Yazar Şifresi">
+                <input type="text" class="form-control mb-2" id="txtwriterpassword2" placeholder="Yazar Şifresini Onayla">
+
+
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card shadow p-3 mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                <h4 class="card-title">❌ Yazar Sil</h4>
+                    <button type="button" id="btndeletewriter" class="btn btn-danger btn-sm">❌ Sil</button>
+                </div>
+                <input type="text" class="form-control mb-2" id="txtid" placeholder="Silinecek Yazar ID">
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card shadow p-3 mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                <h4 class="card-title">✏️ Yazar Güncelle</h4>
+                    <button type="button" id="btnupdatewriter" class="btn btn-warning btn-sm">✏️ Güncelle</button>
+
+                </div>
+                <input type="text" class="form-control mb-2" id="txtid1" placeholder="Güncellenecek Yazar ID">
+                <input type="text" class="form-control mb-2" id="txtwriternameupd" placeholder="Güncellenecek Yazar İsmi">
+                <input type="text" class="form-control mb-2" id="txtwritermailupd" placeholder="Güncellenecek Yazar Maili">
+                <input type="text" class="form-control mb-2" id="txtwriterpassword1upd" placeholder="Güncellenecek Yazar Şifresi">
+                <input type="text" class="form-control mb-2" id="txtwriterpassword2upd" placeholder="Güncellenecek Yazar Şifresi Onayla">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section scripts {
+    <script>
+        $("#btngetlist").click(function () {
+            let writerListDiv = $("#writerlist");
+
+            if (writerListDiv.is(":visible")) {
+                writerListDiv.slideUp(); 
+            } else {
+                $.ajax({
+                    contentType: "application/json",
+                    dataType: "json",
+                    type: "GET",
+                    url: "/Admin/Writer/WriterList/",
+                    success: function (func) {
+                        console.log(func);
+                        let tablehtml = "<table class='table table-bordered'>  <tr> <th>Yazar ID </th> <th>Yazar Adı </th> <th>Yazar Hakkında </th><th>Yazar Durumu </th> </tr>";
+                        $.each(func, (index, value) => {
+                            tablehtml += `<tr> <td>${value.writerID}</td> <td>${value.writerName} </td> <td>${value.writerAbout} </td>  <td>${value.writerStatus ? "Aktif" : "Pasif"}</td> </tr>`;
+                        });
+                        tablehtml += "</table>";
+                        writerListDiv.html(tablehtml);
+                        writerListDiv.slideDown(); 
+                    }
+                });
+            }
+        });
+
+
+        $("#btngetbyid").click(x => {
+            let writerGetDiv = $("#writerget"); 
+
+           
+            if (writerGetDiv.is(":visible")) {
+                writerGetDiv.slideUp();
+                return; 
+            }
+
+            let id = parseInt($("#writerid").val().trim());
+            if (isNaN(id) || id <= 0) {
+                alert("⚠️ Lütfen geçerli bir yazar ID girin!");
+                return;
+            }
+
+            $.ajax({ 
+                contentType: "application/json",
+                dataType: "json",
+                type: "GET",
+                url: "/Admin/Writer/GetWriterById/",
+                data: { writerId: id },
+                success: function (func) {
+                    console.log(func);
+                    let getvalue = `
+                        <table class='table table-bordered'>
+                            <tr><th>Yazar ID</th><th>Yazar Adı</th><th>Yazar Hakkında</th><th>Yazar Durumu</th></tr>
+                            <tr><td>${func.writerID}</td> <td>${func.writerName}</td> <td>${func.writerAbout}</td>
+                            <td>${func.writerStatus ? "Aktif" : "Pasif"}</td></tr>
+                        </table>`;
+
+                    writerGetDiv.html(getvalue);
+                    writerGetDiv.slideDown(); 
+                },
+                error: function (xhr, status, error) {
+                    console.log("🚨 API Hatası: ", xhr.status, xhr.responseText);
+                    if (xhr.status === 404) {
+                        alert("❌ Yazar bulunamadı! Lütfen geçerli bir ID girin.");
+                    } else {
+                        alert("⚠️ Beklenmeyen bir hata oluştu: " + xhr.responseText);
+                    }
+                }
+            });
+        });
+
+        $("#btnaddwriter").click(function () {
+            let writer = {
+                writerName: $("#txtwritername").val(),
+                writerMail: $("#txtwritermail").val().trim(),
+                writerPassword: $("#txtwriterpassword1").val().trim(),
+                confirmPassword: $("#txtwriterpassword2").val().trim()
+            };
+            if (writer.writerPassword !== writer.confirmPassword) {
+                alert("❌ Şifreler uyuşmuyor!");
+                return;
+            }
+         
+            $.ajax({
+                type: "POST",
+                url: "/Admin/Writer/AddWriter/",
+                data: JSON.stringify(writer),
+                contentType: "application/json",
+
+                success: function (func) {
+                    alert("✅ " + "Yazar Ekleme İşlemi Başarılı Bir Şekilde Gerçekleşti");
+                    $("#txtwritername").val("");
+                    $("#txtwritermail").val("");
+                    $("#txtwriterpassword1").val("");
+                    $("#txtwriterpassword2").val("");
+                },
+                error: function (xhr) {
+                    alert("❌ Yazar eklenirken hata oluştu! Hata: " + xhr.responseText);
+                }
+            });
+        });
+
+        $("#btndeletewriter").click(x => {
+            let writerID = parseInt($("#txtid").val().trim());
+            if (isNaN(writerID) || writerID <= 0) {
+                alert("⚠️ Lütfen geçerli bir yazar ID girin!");
+                return;
+            }
+            $.ajax({
+                url: "/Admin/Writer/DeleteWriter/" + writerID,
+                type: "POST",
+                dataType: "json",
+                success: function (func) {
+                    alert("✅ " + "Yazar silme İşlemi Başarılı Bir Şekilde Gerçekleşti");
+                    $("#txtid").val("");
+                           },
+                      error: function () {
+                    alert("❌ Yazar bulunamadı veya silinemedi")
+                }
+            });
+        });
+
+        $("#btnupdatewriter").click(function () {
+            let writer = {
+                writerId: parseInt($("#txtid1").val().trim()),
+                writerName: $("#txtwriternameupd").val(),
+                writerMail: $("#txtwritermailupd").val().trim(),
+                writerPassword: $("#txtwriterpassword1upd").val().trim(),
+                confirmPassword: $("#txtwriterpassword2upd").val().trim()
+            };
+            if (isNaN(writer.writerId) || writer.writerId <= 0 || writer.writerName === "") {
+                alert("⚠️ Lütfen geçerli bir ID ve isim girin!");
+                return;
+            }
+            $.ajax({
+                type: "POST",
+                url: "/Admin/Writer/UpdateWriter/",
+                contentType: "application/json",
+                data: JSON.stringify(writer),
+                success: function (func) {
+                    alert("✅ " + "Güncelleme Yapıldı");
+                    $("#txtid1").val("");
+                    $("#txtwriternameupd").val("");
+                    $("#txtwritermailupd").val("");
+                    $("#txtwriterpassword1upd").val("");
+                    $("#txtwriterpassword2upd").val("");
+                },
+                error: function (xhr) {  // ✅ Hataları yakalamak için error callback eklendi!
+                    console.log("❌ Güncelleme hatası!", xhr.status, xhr.responseText);
+                    alert("❌ Güncelleme başarısız! Hata: " + xhr.responseText);
+                }
+            });
+
+        });
+    </script>
+}

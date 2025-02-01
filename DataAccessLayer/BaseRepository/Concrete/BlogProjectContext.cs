@@ -1,4 +1,5 @@
 ﻿using EntityLayer.Concrete;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DataAccessLayer.BaseRepository.Concrete
 {
-    public class BlogProjectContext : DbContext
+    public class BlogProjectContext : IdentityDbContext<AppUser,AppRole,int>
     {
         public BlogProjectContext(DbContextOptions<BlogProjectContext> options) : base(options)
         {
@@ -27,7 +28,7 @@ namespace DataAccessLayer.BaseRepository.Concrete
                 .WithMany(y => y.WriterReceiver)
                 .HasForeignKey(z => z.ReceiverID)
                 .OnDelete(DeleteBehavior.ClientSetNull);
-
+            base.OnModelCreating(modelBuilder);
         }
         public DbSet<About> Abouts { get; set; }
         public DbSet<Blog> Blogs { get; set; }
