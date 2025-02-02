@@ -1,9 +1,11 @@
 ﻿using BusinessLayer.Abstract;
 using EntityLayer.Concrete;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CoreDemo1.Controllers
 {
+    [AllowAnonymous]
     public class NewsletterController : Controller
     {
      private readonly INewsletterService _newsletterService;
@@ -17,18 +19,15 @@ namespace CoreDemo1.Controllers
             return  PartialView();
         }
         [HttpPost]
-        public  PartialViewResult SubscribeMail(Newsletter p)
+        public JsonResult SubscribeMail(Newsletter p)
         {
             if (string.IsNullOrEmpty(p.Mail))
             {
-                ViewBag.Message = "Email adresi gerekli!";
-                return PartialView();
-
+                return Json("Email adresi gerekli!");
             }
-            p.MailStatus =true;
+            p.MailStatus = true;
             _newsletterService.TAddAsync(p);
-            ViewBag.Message = "Abonelik başarılı";
-            return  PartialView();
+            return Json("Abonelik başarılı!");
         }
     }
 }

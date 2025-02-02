@@ -1,10 +1,11 @@
 ﻿using BusinessLayer.Abstract;
 using EntityLayer.Concrete;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CoreDemo1.Controllers
 {
-
+	[AllowAnonymous]
 	public class ContactController : Controller
 	{
 		private readonly IContactService _contactService;

@@ -1,9 +1,11 @@
 ﻿using BusinessLayer.Abstract;
 using EntityLayer.Concrete;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CoreDemo1.Controllers
 {
+    [AllowAnonymous]
 	public class CommentController : Controller
 	{
 		private readonly ICommentService _commentService;
@@ -21,17 +23,17 @@ namespace CoreDemo1.Controllers
             return PartialView();
         }
         [HttpPost]
-        public async  Task<PartialViewResult> PartialAddComment(Comment p)
+        public async Task<JsonResult> PartialAddComment(Comment p)
         {
+            if (string.IsNullOrEmpty(p.CommentUserName) || string.IsNullOrEmpty(p.CommentContent))
+            {
+                return Json("Ad ve Yorum alanı zorunludur!");
+            }
+
             p.CommentDate = DateTime.UtcNow;
-            p.BlogID = 2;
-             await _commentService.TAddAsync(p);
-            return PartialView();
+            await _commentService.TAddAsync(p);
+
+            return Json("Yorum başarıyla eklendi!");
         }
-        public PartialViewResult CommentListByBlog(int id)
-		{
-			var values=_commentService.GetListByBlogId(id);
-			return PartialView(values);
-		}
-	}
+    }
 }

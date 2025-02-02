@@ -20,11 +20,13 @@ namespace CoreDemo1.Controllers
             _categoryService = categoryService;
             _context    = context;
         }
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             var values = await _blogService.GetBlogListWithCategory();
             return View(values);
         }
+        [AllowAnonymous]
         public async Task<IActionResult> BlogReadAll(int id)
         {
             ViewBag.i = id;
