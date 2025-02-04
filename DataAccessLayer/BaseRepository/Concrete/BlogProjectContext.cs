@@ -9,14 +9,17 @@ using System.Threading.Tasks;
 
 namespace DataAccessLayer.BaseRepository.Concrete
 {
-    public class BlogProjectContext : IdentityDbContext<AppUser,AppRole,int>
+    public class BlogProjectContext : IdentityDbContext<AppUser, AppRole, int>
     {
         public BlogProjectContext(DbContextOptions<BlogProjectContext> options) : base(options)
         {
 
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
+
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<Message2>()
                   .HasOne(x => x.SenderUser)
                   .WithMany(y => y.WriterSender)
@@ -28,7 +31,13 @@ namespace DataAccessLayer.BaseRepository.Concrete
                 .WithMany(y => y.WriterReceiver)
                 .HasForeignKey(z => z.ReceiverID)
                 .OnDelete(DeleteBehavior.ClientSetNull);
-            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Writer>()
+     .HasOne(w => w.AppUser)
+     .WithOne(u => u.Writer)
+     .HasForeignKey<Writer>(w => w.AppUserId)
+     .OnDelete(DeleteBehavior.Cascade);
+
         }
         public DbSet<About> Abouts { get; set; }
         public DbSet<Blog> Blogs { get; set; }

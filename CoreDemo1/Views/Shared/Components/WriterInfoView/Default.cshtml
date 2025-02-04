@@ -1,0 +1,22 @@
+﻿@model EntityLayer.Concrete.Writer
+
+@if (Model != null)
+{
+    <div class="nav-profile-image">
+        <img src="@Model.WriterImage" alt="profile">
+        <span class="login-status online"></span>
+    </div>
+    <div class="nav-profile-text d-flex flex-column">
+        <span class="font-weight-bold mb-2">@Model.WriterName </span>
+    </div>
+}
+else
+{
+    <div class="nav-profile-image">
+        <img src="~/writer/assets/images/faces/default_profile.jpg" alt="profile">
+        <span class="login-status offline"></span>
+    </div>
+    <div class="nav-profile-text d-flex flex-column">
+        <span class="font-weight-bold mb-2">Misafir</span>
+    </div>
+}

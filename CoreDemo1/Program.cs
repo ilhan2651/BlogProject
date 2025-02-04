@@ -60,6 +60,8 @@ builder.Services.AddScoped<IMessageService, MessageManager>();
 
 builder.Services.AddScoped<IAdminRepository, AdminRepository>();
 builder.Services.AddScoped<IAdminService, AdminManager>();
+builder.Services.AddHttpContextAccessor();
+
 
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {

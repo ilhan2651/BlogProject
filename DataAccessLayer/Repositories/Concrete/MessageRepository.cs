@@ -36,5 +36,10 @@ namespace DataAccessLayer.Repositories.Concrete
                 .FirstOrDefaultAsync(m=>m.MessageID == id);
             
         }
+
+        public Task<List<Message2>> GetSendboxWithMessageByWriter(int id)
+        {
+            return _context.Messages2 .Include(m => m.ReceiverUser).Where(m=>m.SenderID==id).ToListAsync();
+        }
     }
 }

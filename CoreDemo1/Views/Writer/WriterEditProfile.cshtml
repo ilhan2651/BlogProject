@@ -10,50 +10,52 @@
             <div class="card-body">
                 <h4 class="card-title">Yazar Profil Bilgileri Düzenleme</h4>
                 <br>
-                @Html.HiddenFor(w => w.WriterID, new { @class = "form-control" })
-               
-                    <div class="form-group">
-                        <label for="exampleInputName1">Yazar Ad-Soyad</label>
-                        @Html.TextBoxFor(w => w.WriterName, new { @class = "form-control" })
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleInputEmail3"> Mail Adresi</label>
-                        @Html.TextBoxFor(w => w.WriterMail, new { @class = "form-control" })
+                
+                <!-- Mevcut değerleri korumak için hidden input ekliyoruz -->
+                @Html.HiddenFor(w => w.WriterID)
+                @Html.HiddenFor(w => w.AppUserId)  <!-- Foreign Key'i koru -->
 
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleInputPassword4">Şifre</label>
-                        @Html.PasswordFor(w => w.WriterPassword, new { @class = "form-control" })
+                <div class="form-group">
+                    <label>Yazar Ad-Soyad</label>
+                    @Html.TextBoxFor(w => w.WriterName, new { @class = "form-control" })
+                </div>
+
+                <div class="form-group">
+                    <label>Mail Adresi</label>
+                    @Html.TextBoxFor(w => w.WriterMail, new { @class = "form-control" })
+                </div>
+
+                <div class="form-group">
+                    <label>Şifre</label>
+                    @Html.PasswordFor(w => w.WriterPassword, new { @class = "form-control" })
                     @Html.ValidationMessageFor(x => x.WriterPassword, "", new { @class = "text-danger" })
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleInputPassword4">Şifreyi Doğrula</label>
-                        @Html.PasswordFor(w => w.ConfirmPassword, new { @class = "form-control"})
-                        @Html.ValidationMessageFor(x => x.ConfirmPassword,"", new{@class="test-danger"})
-                        
-                    </div>
+                </div>
 
-                    <div class="form-group">
-                        <label>Yazar Görsel</label>
-                        <input type="file" name="img[]" class="file-upload-default">
-                        <div class="input-group col-xs-12">
-                            <input type="text" class="form-control file-upload-info" disabled placeholder="Upload Image">
-                            <span class="input-group-append">
-                                <button class="file-upload-browse btn btn-gradient-primary" type="button">Resim Seç</button>
-                            </span>
-                        </div>
-                    </div>
+                <div class="form-group">
+                    <label>Şifreyi Doğrula</label>
+                    @Html.PasswordFor(w => w.ConfirmPassword, new { @class = "form-control"})
+                    @Html.ValidationMessageFor(x => x.ConfirmPassword, "", new { @class="text-danger" })
+                </div>
 
-                    <div class="form-group">
-                        <label for="exampleTextarea1">Yazar Hakkında</label>
-                        @Html.TextAreaFor(w => w.WriterAbout, 10, 3, new { @class = "form-control" })
-
+                <div class="form-group">
+                    <label>Yazar Görsel</label>
+                    <input type="file" name="img[]" class="file-upload-default">
+                    <div class="input-group col-xs-12">
+                        <input type="text" asp-for="WriterImage" class="form-control file-upload-info" placeholder="Resim URL">
+                        <span class="input-group-append">
+                            <button class="file-upload-browse btn btn-gradient-primary" type="button">Resim Seç</button>
+                        </span>
                     </div>
-                    <button type="submit" class="btn btn-gradient-primary mr-2">Güncelle</button>
-                    <button class="btn btn-light">İptal</button>
-               
+                </div>
+
+                <div class="form-group">
+                    <label>Yazar Hakkında</label>
+                    @Html.TextAreaFor(w => w.WriterAbout, 10, 3, new { @class = "form-control" })
+                </div>
+
+                <button type="submit" class="btn btn-gradient-primary mr-2">Güncelle</button>
+                <button class="btn btn-light" asp-action="Index" asp-controller="Dashboard">İptal</button>
             </div>
         </div>
     </div>
 }
-

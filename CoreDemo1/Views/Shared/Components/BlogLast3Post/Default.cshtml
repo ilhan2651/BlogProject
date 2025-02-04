@@ -19,8 +19,12 @@
 		<div class="col-md-7 blog-grid-right">
 
 			<h5>
-					<a href="/Blog/BlogReadAll/@item.BlogID">@item.BlogContent.Substring(0, item.BlogContent.Substring(0, 50).LastIndexOf(""))...</a>
-			</h5>
+					<a href="/Blog/BlogReadAll/@item.BlogID">
+						@((item.BlogContent.Length > 50)
+													? item.BlogContent.Substring(0, item.BlogContent.Substring(0, 50).LastIndexOf(" ")) + "..."
+													: item.BlogContent)
+					</a>
+				</h5>
 			<div class="sub-meta">
 				<span>
 						<i class="far fa-clock"></i>  @(((DateTime)item.BlogCreateDate).ToString("dd-MMM-yyyy"))

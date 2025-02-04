@@ -488,6 +488,9 @@ namespace DataAccessLayer.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("WriterID"));
 
+                    b.Property<int>("AppUserId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("ConfirmPassword")
                         .IsRequired()
                         .HasColumnType("text");
@@ -515,6 +518,9 @@ namespace DataAccessLayer.Migrations
                         .HasColumnType("boolean");
 
                     b.HasKey("WriterID");
+
+                    b.HasIndex("AppUserId")
+                        .IsUnique();
 
                     b.ToTable("Writers");
                 });
@@ -665,6 +671,17 @@ namespace DataAccessLayer.Migrations
                     b.Navigation("SenderUser");
                 });
 
+            modelBuilder.Entity("EntityLayer.Concrete.Writer", b =>
+                {
+                    b.HasOne("EntityLayer.Concrete.AppUser", "AppUser")
+                        .WithOne("Writer")
+                        .HasForeignKey("EntityLayer.Concrete.Writer", "AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AppUser");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
                     b.HasOne("EntityLayer.Concrete.AppRole", null)
@@ -713,6 +730,12 @@ namespace DataAccessLayer.Migrations
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("EntityLayer.Concrete.AppUser", b =>
+                {
+                    b.Navigation("Writer")
                         .IsRequired();
                 });
 

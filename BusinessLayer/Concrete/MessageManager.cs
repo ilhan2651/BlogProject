@@ -25,5 +25,10 @@ namespace BusinessLayer.Concrete
         {
             return await _messageRepository.GetMessageWithWriterById(id);
         }
+
+        public async Task<List<Message2>> GetSendboxListByWriter(int id)
+        {
+              return await _messageRepository.GetSendboxWithMessageByWriter(id);
+        }
     }
 }

@@ -1,8 +1,10 @@
 ﻿using BusinessLayer.Abstract;
+using BusinessLayer.Concrete;
 using CoreDemo1.Models;
 using DataAccessLayer.BaseRepository.Concrete;
 using EntityLayer.Concrete;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -14,11 +16,13 @@ namespace CoreDemo1.Controllers
         private readonly IBlogService _blogService;
         private readonly ICategoryService _categoryService;
         private readonly BlogProjectContext _context;
-        public BlogController(IBlogService blogService, ICategoryService categoryService,BlogProjectContext context)
+        private readonly UserManager<AppUser> _userManager;
+        public BlogController(IBlogService blogService, ICategoryService categoryService,BlogProjectContext context,UserManager<AppUser> userManager)
         {
             _blogService = blogService;
             _categoryService = categoryService;
             _context    = context;
+            _userManager = userManager; 
         }
         [AllowAnonymous]
         public async Task<IActionResult> Index()
@@ -35,9 +39,10 @@ namespace CoreDemo1.Controllers
         }
         public async Task<IActionResult> BlogListByWriter()
         {
-            var userMail = User.Identity.Name;
-            var writerID = _context.Writers.Where(x => x.WriterMail == userMail).Select(x => x.WriterID).FirstOrDefault();
-            var values = await _blogService.GetListWithCategoryByWriterBm(writerID);
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            var writer = await _context.Writers.FirstOrDefaultAsync(x=>x.AppUserId==user.Id);
+           var writerId=writer.WriterID;
+            var values = await _blogService.GetListWithCategoryByWriterBm(writerId);
             return View(values);
         }
         [HttpGet]
@@ -60,8 +65,10 @@ namespace CoreDemo1.Controllers
 
         public async Task<IActionResult> BlogAdd(BlogAddViewModel model)
         {
-            var userMail = User.Identity.Name;
-            var writerID = _context.Writers.Where(x => x.WriterMail == userMail).Select(x => x.WriterID).FirstOrDefault();
+            var user =await _userManager.FindByNameAsync(User.Identity.Name);
+            var writer = await _context.Writers.FirstOrDefaultAsync(x => x.AppUserId == user.Id);
+            var writerId = writer.WriterID;
+
             ModelState.Remove("Categories");
             if (!ModelState.IsValid)
             {
@@ -85,7 +92,7 @@ namespace CoreDemo1.Controllers
                 CategoryID = model.CategoryID,
                 BlogStatus = true,
                 BlogCreateDate = DateTime.UtcNow,
-                WriterID = writerID
+                WriterID = writerId
             }; 
 
             await _blogService.TAddAsync(blog);

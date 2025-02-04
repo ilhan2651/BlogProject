@@ -17,16 +17,28 @@ namespace CoreDemo1.ViewComponents.Writer
         {
             _writerService = writerService;
             _context = context;
+            _userManager = userManager;
         }
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var userName= User.Identity.Name;
-            ViewBag.v=userName;
-            var usermail= await _context.Users.Where(x=> x.UserName == userName).Select(y=>y.Email).FirstOrDefaultAsync();
-             var writerID=_context.Writers.Where(x=>x.WriterMail== usermail).Select(x=>x.WriterID).FirstOrDefault();
-            var value = await _writerService.TGetByIdAsync(writerID);
-            return View(value);
+            //var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            //if (user != null)
+            //{
+            //    var writer = await _context.Writers.FirstOrDefaultAsync(w => w.AppUserId == user.Id);
+            //    var writerId = writer.WriterID;
+            //    var writerValues = await _writerService.TGetByIdAsync(writerId);
+            //    return View(writerValues);
+            //}
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            if (user != null)
+            {
+                var writer = await _context.Writers.FirstOrDefaultAsync(w => w.AppUserId == user.Id);
+                var writerId = writer.WriterID;
+                var writerValues = await _writerService.TGetByIdAsync(writerId);
+                return View(writerValues);
+            }
+            return View();
         }
     }
 }

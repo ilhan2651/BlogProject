@@ -148,34 +148,17 @@
 
                 </nav>
             </div>
-            <div class="row wrapper border-bottom white-bg page-heading">
-                <div class="col-lg-10">
-                    <h2>Static Tables</h2>
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item">
-                            <a href="index.html">Home</a>
-                        </li>
-                        <li class="breadcrumb-item">
-                            <a>Tables</a>
-                        </li>
-                        <li class="breadcrumb-item active">
-                            <strong>Static Tables</strong>
-                        </li>
-                    </ol>
-                </div>
-                <div class="col-lg-2">
-                </div>
-            </div>
+         
             <div class="wrapper wrapper-content animated fadeInRight">
 
                 @RenderBody()
             </div>
             <div class="footer">
                 <div class="float-right">
-                    10GB of <strong>250GB</strong> Free.
+                    Blog <strong>Admin</strong> Paneli
                 </div>
                 <div>
-                    <strong>Copyright</strong> Example Company &copy; 2014-2018
+                    <strong>Copyright</strong>  &copy; @DateTime.UtcNow.Year
                 </div>
             </div>
 
@@ -212,7 +195,7 @@
             });
         });
     </script>
-    @await RenderSectionAsync("scripts")
+    @await RenderSectionAsync("scripts",required:false)
 </body>
 
 </html>

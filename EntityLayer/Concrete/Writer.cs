@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -14,6 +15,9 @@ namespace EntityLayer.Concrete
         [Key]
 
         public int  WriterID { get; set; }
+        [ForeignKey("AppUser")]
+        public int AppUserId { get; set; }
+        public AppUser AppUser { get; set; }
         public string WriterName { get; set; }
         public string WriterAbout { get; set; } 
         public string? WriterImage { get; set; }
