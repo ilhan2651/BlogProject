@@ -23,6 +23,18 @@ namespace DataAccessLayer.Repositories.Concrete
         {
             return await _context.Messages2.Where(x => x.ReceiverID == receiverID).ToListAsync();
         }
+
+        public async  Task<List<Message2>> GetInboxListByWriterOrderingDateAsync(int receiverID)
+        {
+            return await _context.Messages2
+                .Include(m=>m.SenderUser)
+                .Where(x => x.ReceiverID == receiverID)
+                .OrderByDescending(x => x.MessageDate)
+                .Take(5)
+                .ToListAsync();
+
+        }
+
         public async Task<List<Message2>> GetListWithMessageByWriter(int id)
         {
             return await _context.Messages2
@@ -36,10 +48,22 @@ namespace DataAccessLayer.Repositories.Concrete
                 .FirstOrDefaultAsync(m=>m.MessageID == id);
             
         }
+        public async Task<Message2> GetMessageWithWriterReceiverById(int id)
+        {
+            return await _context.Messages2
+                 .Include(m => m.ReceiverUser)
+                 .FirstOrDefaultAsync(m => m.MessageID == id);
+
+        }
 
         public Task<List<Message2>> GetSendboxWithMessageByWriter(int id)
         {
             return _context.Messages2 .Include(m => m.ReceiverUser).Where(m=>m.SenderID==id).ToListAsync();
+        }
+
+        public async Task<int> GetTotalMessageCount(int userId)
+        {
+            return await _context.Messages2.CountAsync(m=>m.ReceiverID==userId);
         }
     }
 }

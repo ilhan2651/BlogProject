@@ -26,7 +26,8 @@ namespace CoreDemo1.ViewComponents.Writer
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
             var writer = await _context.Writers.FirstOrDefaultAsync(x => x.AppUserId == user.Id);
             var writerId = writer.WriterID;
-            var values = await _messageService.GetInboxListByWriter(writerId);
+            var values = await _messageService.GetInboxListByWriterOrderingDate(writerId);
+            ViewBag.MessageCount= await _messageService.GetTotalMessageCount(writerId);
             return View(values);
         }
     }

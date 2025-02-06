@@ -21,14 +21,30 @@ namespace BusinessLayer.Concrete
         {
             return await _messageRepository.GetListWithMessageByWriter(id);
         }
+
+        public async Task<List<Message2>> GetInboxListByWriterOrderingDate(int id)
+        {
+            return await _messageRepository.GetInboxListByWriterOrderingDateAsync(id);
+        }
+
         public async Task<Message2> GetMessageWithWriterById(int id)
         {
             return await _messageRepository.GetMessageWithWriterById(id);
         }
 
+        public async Task<Message2> GetMessageWithWriterReceiverUserById(int id)
+        {
+          return await  _messageRepository.GetMessageWithWriterReceiverById(id);
+        }
+
         public async Task<List<Message2>> GetSendboxListByWriter(int id)
         {
               return await _messageRepository.GetSendboxWithMessageByWriter(id);
+        }
+
+        public async Task<int> GetTotalMessageCount(int receiverId)
+        {
+            return await _messageRepository.GetTotalMessageCount(receiverId);
         }
     }
 }

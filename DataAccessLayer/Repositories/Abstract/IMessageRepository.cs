@@ -14,6 +14,10 @@ namespace DataAccessLayer.Repositories.Abstract
         Task<List<Message2>> GetListWithMessageByWriter(int id);
         Task<Message2> GetMessageWithWriterById(int id);
         Task<List<Message2>> GetSendboxWithMessageByWriter(int id);
+        Task<Message2> GetMessageWithWriterReceiverById(int id);
 
+        Task<List<Message2>> GetInboxListByWriterOrderingDateAsync(int receiverID);
+
+        Task<int> GetTotalMessageCount(int userId);
     }
 }

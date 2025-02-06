@@ -5,22 +5,26 @@
     Layout = "~/Views/Shared/WriterLayout.cshtml";
 }
 
-<h1>Tüm Bildirimler</h1>
-<table class="table-bordered">
-    <tr>
-        <th>#</th>
-        <th>Bildirim</th>
-        <th>Tarih</th>
+<h1 class="text-center text-primary mt-3">📢 Tüm Bildirimler</h1>
 
-    </tr>
-    @foreach (var item in Model)
-    {
-     
-        <tr>
-            <td>@item.NotificationID</td>
-            <td>@item.NotificationDetails</td>
-            <td>@item.NotificationDate.ToShortDateString()</td>
-        </tr>
-    }
-
-</table>
+<div class="container mt-4">
+    <table class="table table-striped table-hover table-bordered text-center shadow-sm">
+        <thead class="bg-light">
+            <tr>
+                <th>#</th>
+                <th>Bildirim</th>
+                <th>Tarih</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td><strong>@item.NotificationID</strong></td>
+                    <td>@item.NotificationDetails</td>
+                    <td>@item.NotificationDate.ToShortDateString()</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

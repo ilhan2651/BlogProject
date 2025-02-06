@@ -10,5 +10,6 @@ namespace DataAccessLayer.Repositories.Abstract
 {
     public interface ICommentRepository : IGenericRepository<Comment>
     {
+        public Task<List<Comment>> GetListWithBlog();
     }
 }

@@ -17,7 +17,12 @@ namespace BusinessLayer.Concrete
              _commentRepository = commentRepository;
         }
 
-		public Task<List<Comment>> GetListByBlogId(int id)
+        public async Task<List<Comment>> GetCommenWithBlog()
+        {
+            return await   _commentRepository.GetListWithBlog();
+        }
+
+        public Task<List<Comment>> GetListByBlogId(int id)
 		{
 			return _commentRepository.GetFilteredList(x=>x.BlogID == id);   
 		}

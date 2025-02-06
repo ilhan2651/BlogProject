@@ -1,6 +1,7 @@
 ﻿using DataAccessLayer.BaseRepository.Concrete;
 using DataAccessLayer.Repositories.Abstract;
 using EntityLayer.Concrete;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,11 @@ namespace DataAccessLayer.Repositories.Concrete
         {
             _context    = context;
 
+        }
+
+        public async Task<List<Comment>> GetListWithBlog()
+        {
+            return await _context.Comments.Include(x=>x.Blog).ToListAsync();
         }
     }
 }

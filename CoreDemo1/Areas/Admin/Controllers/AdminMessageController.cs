@@ -1,9 +1,11 @@
 ﻿using BusinessLayer.Abstract;
 using DataAccessLayer.BaseRepository.Concrete;
+using DocumentFormat.OpenXml.Bibliography;
 using EntityLayer.Concrete;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using X.PagedList.Extensions;
 
 namespace CoreDemo1.Areas.Admin.Controllers
 { 
@@ -19,27 +21,69 @@ namespace CoreDemo1.Areas.Admin.Controllers
             _context = context;
             _userManager = userManager;
         }
-        public async Task<IActionResult> InBox()
+        public async Task<IActionResult> InBox(int page = 1)
         {
 
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
             var writer = await _context.Writers.FirstOrDefaultAsync(x => x.AppUserId == user.Id);
             var writerId = writer.WriterID;
             var values = await _messageService.GetInboxListByWriter(writerId);
-            return View(values);
+            ViewBag.InBoxCount = (await _messageService.GetInboxListByWriter(writerId))?.Count() ?? 0;
+            ViewBag.InBoxUnreadCount = (await _messageService.GetInboxListByWriter(writerId))
+                        ?.Count(m => !m.IsRead) ?? 0;
+            var pagedValues = values.AsQueryable().ToPagedList(page, 8);
+
+            return View(pagedValues);
         }
-        public async Task<IActionResult> SendBox()
+        public async Task<IActionResult> SendBox(int page=1)
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
             var writer = await _context.Writers.FirstOrDefaultAsync(x => x.AppUserId == user.Id);
             var writerId = writer.WriterID;
             var values = await _messageService.GetSendboxListByWriter(writerId);
-            return View(values);
-
+            ViewBag.InBoxUnreadCount = (await _messageService.GetInboxListByWriter(writerId))
+                                  ?.Count(m => !m.IsRead) ?? 0;
+            ViewBag.SendBoxCount=(await  _messageService.GetSendboxListByWriter(writerId)).Count();
+            var pagedValues=values.AsQueryable().ToPagedList(page,8);
+            return View(pagedValues);
         }
+        public async Task<IActionResult> MessageDetail(int id)
+        {
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            var writer = await _context.Writers.FirstOrDefaultAsync(x => x.AppUserId == user.Id);
+            var writerId = writer.WriterID;
+            ViewBag.InBoxUnreadCount = (await _messageService.GetInboxListByWriter(writerId))
+                               ?.Count(m => !m.IsRead) ?? 0;
+            var message= await _messageService.GetMessageWithWriterById(id);
+            if (!message.IsRead)
+            {
+                message.IsRead = true;
+                await _messageService.TUpdateAsync(message);
+            }
+            return View(message);
+        }
+        public async Task<IActionResult> MessageDetailSendbox(int id)
+        {
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            var writer = await _context.Writers.FirstOrDefaultAsync(x => x.AppUserId == user.Id);
+            var writerId = writer.WriterID;
+            ViewBag.InBoxUnreadCount = (await _messageService.GetInboxListByWriter(writerId))
+                               ?.Count(m => !m.IsRead) ?? 0;
+            var message=await _messageService.GetMessageWithWriterReceiverUserById(id);
+            return View(message);
+        }
+
+
+
+
         [HttpGet]
         public async Task<IActionResult> ComposeMessage() 
         {
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            var writer = await _context.Writers.FirstOrDefaultAsync(x => x.AppUserId == user.Id);
+            var writerId = writer.WriterID;
+            ViewBag.InBoxUnreadCount = (await _messageService.GetInboxListByWriter(writerId))
+                              ?.Count(m => !m.IsRead) ?? 0;
             return View();
         }
         [HttpPost]
@@ -49,13 +93,14 @@ namespace CoreDemo1.Areas.Admin.Controllers
             var writer = await _context.Writers.FirstOrDefaultAsync(x => x.AppUserId == user.Id);
             var receiverUser = await _userManager.FindByEmailAsync(ReceiverMail);
             var receiverWriter = await _context.Writers.FirstOrDefaultAsync(x => x.AppUserId == receiverUser.Id);
+            
             if (receiverWriter == null)
             {
                 ModelState.AddModelError("", "Bu e-posta adresine sahip bir yazar bulunamadı.");
                 return View(message);
             }
             var writerId = writer.WriterID;
-
+           
 
             message.SenderID = writerId;
             message.ReceiverID = receiverWriter.WriterID;

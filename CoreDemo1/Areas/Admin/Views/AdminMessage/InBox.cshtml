@@ -1,5 +1,7 @@
-﻿@using EntityLayer.Concrete
-@model List<Message2>
+﻿@using X.PagedList
+@using X.PagedList.Mvc.Core
+
+@model IPagedList<EntityLayer.Concrete.Message2>
 @{
     ViewData["Title"] = "InBox";
     Layout = "~/Views/Shared/AdminLayout.cshtml";
@@ -16,15 +18,14 @@
                 <div class="ibox ">
                     <div class="ibox-content mailbox-content">
                         <div class="file-manager">
-                            <a class="btn btn-block btn-primary compose-mail" href="mail_compose.html">Mesaj Kutusu</a>
+                            <a class="btn btn-block btn-primary compose-mail" href="/Admin/AdminMessage/ComposeMessage/">Yeni Mesaj Oluştur</a>
                             <div class="space-25"></div>
                             <h5>Klasörler</h5>
                             <ul class="folder-list m-b-md" style="padding: 0">
-                                <li><a href="/Admin/AdminMessage/InBox/"> <i class="fa fa-inbox "></i> Gelen Mesajlar <span class="label label-warning float-right">16</span> </a></li>
-                                <li><a href="/Admin/AdminMessage/SendBox/"> <i class="fa fa-envelope-o"></i> Giden Mesajşar</a></li>
-                                <li><a href="mailbox.html"> <i class="fa fa-certificate"></i> Önemli Mesajlar</a></li>
-                                <li><a href="mailbox.html"> <i class="fa fa-file-text-o"></i> Taslaklar <span class="label label-danger float-right">2</span></a></li>
-                                <li><a href="mailbox.html"> <i class="fa fa-trash-o"></i> Çop Kutusu</a></li>
+                                <li><a href="/Admin/AdminMessage/InBox/"> <i class="fa fa-inbox "></i> Gelen Mesajlar <span class="label label-warning float-right">@ViewBag.InBoxUnreadCount</span> </a></li>
+                                <li><a href="/Admin/AdminMessage/SendBox/"> <i class="fa fa-envelope-o"></i> Giden Mesajlar</a></li>
+                                <li><a href="/Admin/AdminMessage/ComposeMessage/"> <i class="fa fa-plus"></i> Mesaj Oluştur </a></li>
+
                             </ul>
                             <h5>Kategoriler</h5>
                             <ul class="category-list" style="padding: 0">
@@ -33,7 +34,7 @@
                                 <li><a href="#"> <i class="fa fa-circle text-primary"></i> Sosyal</a></li>
                                 <li><a href="#"> <i class="fa fa-circle text-info"></i> Tanıtımlar</a></li>
                                 <li><a href="#"> <i class="fa fa-circle text-warning"></i> Talepler</a></li>
-                            </ul>                     
+                            </ul>
                             <div class="clearfix"></div>
                         </div>
                     </div>
@@ -53,19 +54,16 @@
                         </div>
                     </form>
                     <h2>
-                        Gelen Kutusu (0)
+                        Gelen Kutusu (@ViewBag.InBoxCount)
                     </h2>
                     <div class="mail-tools tooltip-demo m-t-md">
                         <div class="btn-group float-right">
-                            <button class="btn btn-white btn-sm"><i class="fa fa-arrow-left"></i></button>
-                            <button class="btn btn-white btn-sm"><i class="fa fa-arrow-right"></i></button>
+                            
 
                         </div>
-                        <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="left" title="Yenile"><i class="fa fa-refresh"></i> Yenile</button>
-                        <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="Okundu Olarak İşaretle"><i class="fa fa-eye"></i> </button>
-                        <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="Önemli Olarak İşaretle"><i class="fa fa-exclamation"></i> </button>
-                        <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="Çöp Kutusuna Taşı"><i class="fa fa-trash-o"></i> </button>
-
+                        <a href="/Admin/AdminMessage/InBox/" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="left" title="Yenile">
+                            <i class="fa fa-refresh"></i> Yenile
+                        </a>
                     </div>
                 </div>
                 <div class="mail-box">
@@ -73,18 +71,22 @@
                     <table class="table table-hover table-mail">
                         <tbody>
                             @foreach (var item in Model)
-                            {                                                      
-                            <tr class="read">
-                                <td class="check-mail">
-                                    <input type="checkbox" class="i-checks">
-                                </td>
-                                <td class="mail-ontact"><a href="mail_detail.html">@item.SenderUser.WriterName</a></td>
-                                <td class="mail-subject"><a href="mail_detail.html">@item.Subject</a></td>
-                                <td class="text-right mail-date"> @(((DateTime)item.MessageDate).ToString("dd-MMM-yyyy"))</td>
-                            </tr>
+                            {
+                                <tr class="@((item.IsRead) ? "read" : "unread")">
+                                    <td class="mail-icon">
+                                        <i class="fa @(item.IsRead ? "fa-envelope-open" : "fa-envelope")"></i>
+                                    </td>
+                                    <td class="mail-ontact"><a href="mail_detail.html">@item.SenderUser.WriterName</a></td>
+                                    <td class="mail-subject"><a href="mail_detail.html">@item.Subject</a></td>
+                                    <td class="text-right mail-date"> @(((DateTime)item.MessageDate).ToString("dd-MMM-yyyy"))</td>
+                                    <td>
+                                        <a href="/Admin/AdminMessage/MessageDetail/@item.MessageID" asp-action="ComposeMessage" class="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="top" title="Mesajı Görüntüle">Mesajı Görüntüle</a>
+                                    </td>
+                                </tr>
                             }
                         </tbody>
                     </table>
+                    @Html.PagedListPager(Model, page => Url.Action("SendBox", "AdminMessage", new { area = "Admin", page }))
 
 
                 </div>
