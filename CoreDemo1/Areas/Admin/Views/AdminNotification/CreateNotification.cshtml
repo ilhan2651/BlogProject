@@ -1,0 +1,44 @@
+﻿@model EntityLayer.Concrete.Notification
+
+@{
+    ViewData["Title"] = "CreateNotification";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+}
+
+
+<div class="container mt-4">
+    <h2 class="mb-4">Yeni Bildirim Ekle</h2>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+    }
+
+    <form asp-action="CreateNotification" asp-controller="AdminNotification" method="post">
+        <div class="form-group">
+            <label asp-for="NotificationType">Bildirim Türü</label>
+            <input asp-for="NotificationType" class="form-control" required>
+        </div>
+
+        <div class="form-group mt-3">
+            <label asp-for="NotificationDetails">Bildirim Açıklaması</label>
+            <textarea asp-for="NotificationDetails" class="form-control" rows="3" required></textarea>
+        </div>
+
+        <input type="hidden" asp-for="NotificationTypeSymbol" value="mdi mdi-bell">
+        <input type="hidden" asp-for="NotificationColor" value="preview-icon bg-secondary">
+        <input type="hidden" asp-for="NotificationStatus" value="true">
+        <input type="hidden" asp-for="NotificationDate" value="@DateTime.UtcNow">
+
+        <button type="submit" class="btn btn-primary mt-3">Bildirimi Kaydet</button>
+    </form>
+
+
+</div>
+
+

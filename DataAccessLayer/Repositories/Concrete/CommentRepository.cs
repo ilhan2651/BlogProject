@@ -23,6 +23,14 @@ namespace DataAccessLayer.Repositories.Concrete
         {
             return await _context.Comments.Include(x=>x.Blog).ToListAsync();
         }
+        public async Task<double> GetAverageScoreByBlogId(int blogId)
+        {
+            return await _context.Comments
+                .Where(c => c.BlogID == blogId) 
+                .Select(c => (double?)c.BlogScore) 
+                .AverageAsync() ?? 0; 
+        }
+
     }
 }
  

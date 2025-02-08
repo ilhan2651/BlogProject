@@ -79,7 +79,7 @@
                                     <td class="mail-subject"><a href="mail_detail.html">@item.Subject</a></td>
                                     <td class="text-right mail-date"> @(((DateTime)item.MessageDate).ToString("dd-MMM-yyyy"))</td>
                                     <td>
-                                        <a href="/Admin/AdminMessage/MessageDetailSendBox/@item.MessageID" asp-action="ComposeMessage" class="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="top" title="Mesajı Görüntüle">Mesajı Görüntüle</a>
+                                        <a href="/Admin/AdminMessage/MessageDetailSendBox/@item.MessageID" class="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="top" title="Mesajı Görüntüle">Mesajı Görüntüle</a>
                                     </td>
                                 </tr>
                             }

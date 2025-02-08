@@ -1,0 +1,61 @@
+﻿@model CoreDemo1.Areas.Admin.Models.AboutViewModel
+
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+}
+
+
+
+
+<div class="container mt-4">
+    <h2 class="mb-4">Hakkımızda Yönetimi</h2>
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    }
+    <form asp-action="UpdateAbout" asp-controller="AdminAbout" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="AboutDetails1">Hakkımızda Detayı</label>
+            <textarea id="AboutDetails1" name="AboutDetails1" class="form-control" rows="12">@Model.AboutDetails1</textarea>
+        </div>
+
+        <div class="form-group mt-3">
+            <label>Mevcut Görsel:</label>
+            <div>
+                @if (!string.IsNullOrEmpty(Model.AboutImage1))
+                {
+                    <img src="@Model.AboutImage1" alt="About Image" class="img-thumbnail" style="max-width: 200px; height: auto;" />
+                }
+                else
+                {
+                    <p>Görsel bulunamadı.</p>
+                }
+            </div>
+        </div>
+
+        <div class="form-group mt-3">
+            <label for="AboutImage1">Yeni Görsel Yükle</label>
+            <input type="file" id="AboutImage1" name="AboutImage1" class="form-control" />
+        </div>
+
+        <button type="submit" class="btn btn-primary mt-3">Güncelle</button>
+    </form>
+</div>
+

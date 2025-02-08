@@ -28,5 +28,6 @@ namespace DataAccessLayer.Repositories.Concrete
             return await _context.Categories
                 .Include(b => b.Blogs).ToListAsync();
         }
+       
     }
 }

@@ -15,38 +15,39 @@
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript">
     google.charts.load('current', { 'packages': ['corechart'] });
-    google.charts.setOnLoadCallback(DrawonLoad);
+    google.charts.setOnLoadCallback(DrawChart);
 
-    function DrawonLoad() {
-        $(function () {
-            $.ajax({
-                type: 'GET',
-                url: '/Admin/Chart/CategoryChart',
-                success: function (chartsdata) {
-                    console.log("Gelen veri:", chartsdata); // Gelen veriyi kontrol et
-                    var Data = chartsdata;
-                    var data = new google.visualization.DataTable();
+    function DrawChart() {
+        $.ajax({
+            type: 'GET',
+            url: '/Admin/Chart/CategoryChart',
+            success: function (chartsdata) {
+                console.log("Gelen veri:", chartsdata);
 
-                    data.addColumn('string', 'categoryName');
-                    data.addColumn('number', 'categoryCount');
-
-                    for (var i = 0; i < Data.length; i++) {
-                        data.addRow([Data[i].categoryName, Data[i].categoryCount]);
-                    }
-
-                    var chart = new google.visualization.PieChart(document.getElementById('chartdiv'));
-                    chart.draw(data, {
-                        title: "Google Chart BloggEdu Projesi",
-                        position: "top",
-                        fontsize: "16px"
-                    });
-                },
-                error: function (xhr, status, error) {
-                    console.error("Hata oluştu:", xhr.responseText);
-                    alert("Hata oluştu: " + xhr.responseText);
+                if (!chartsdata || chartsdata.length === 0) {
+                    console.error("Boş veri döndü!");
+                    return;
                 }
-            });
 
-        })
+                var data = new google.visualization.DataTable();
+                data.addColumn('string', 'categoryName');
+                data.addColumn('number', 'categoryCount'); 
+
+                chartsdata.forEach(function (item) {
+                    data.addRow([item.categoryName, item.categoryCount]);
+                });
+
+                var chart = new google.visualization.PieChart(document.getElementById('chartdiv'));
+                chart.draw(data, {
+                    title: "Google Chart - BloggEdu Projesi",
+                    fontSize: 16,
+                    pieHole: 0.3 
+                });
+            },
+            error: function (xhr, status, error) {
+                console.error("Hata oluştu:", xhr.responseText);
+                alert("Hata oluştu: " + xhr.responseText);
+            }
+        });
     }
 </script>

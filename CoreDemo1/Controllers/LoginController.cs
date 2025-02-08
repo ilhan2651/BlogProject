@@ -59,6 +59,10 @@ namespace CoreDemo1.Controllers
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Login");
         }
+        public async Task<IActionResult> AccessDenided()
+        {
+            return View();
+        }
     }
 }
 

@@ -5,24 +5,53 @@
             <input type="hidden" id="blogId" value="@ViewBag.i">
             <input class="form-control" type="text" id="commentUserName" placeholder="Adınız Soyadınız" required="">
             <input class="form-control" type="text" id="commentTitle" placeholder="Konu" required="">
+            <input class="form-control" type="number" id="blogScore" placeholder="Puan (0-10)" min="0" max="10" required="">
+            <br/>
             <textarea class="form-control" id="commentContent" placeholder="Yorumunuz..." required=""></textarea>
+
             <button type="button" id="submitComment" class="btn btn-primary submit">Yorum Yap</button>
         </form>
-        <p id="commentMessage" style="color: green;"></p> <!-- AJAX sonucu buraya yazılacak -->
+        <p id="commentMessage" style="color: green;"></p> 
     </div>
 </div>
+<style>
+    input::placeholder, textarea::placeholder {
+        color: #999;
+        font-style: italic;
+    }
 
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    input, textarea {
+        color: #000 !important;
+        background-color: #fff;
+        font-weight: normal;
+        opacity: 1 !important;
+    }
+
+        input:focus, textarea:focus {
+            color: #222 !important;
+            opacity: 1 !important;
+            outline: none;
+            border: 1px solid #aaa;
+        }
+</style>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
         $("#submitComment").click(function (event) {
-            event.preventDefault(); // Sayfanın yenilenmesini engelle
-
+            event.preventDefault(); 
+            let blogScoreValue = parseInt($("#blogScore").val());
+            if (isNaN(blogScoreValue) || blogScoreValue < 0 || blogScoreValue > 10) {
+                $("#commentMessage").text("Puan 0 ile 10 arasında olmalıdır!").css("color", "red");
+                return;
+            }
             let commentData = {
-                BlogID: $("#blogId").val(), // Blog ID'yi al
-                CommentUserName: $("#commentUserName").val(), // Kullanıcı adını al
-                CommentTitle: $("#commentTitle").val(), // Yorum başlığını al
-                CommentContent: $("#commentContent").val() // Yorum içeriğini al
+                BlogID: $("#blogId").val(), 
+                CommentUserName: $("#commentUserName").val(), 
+                CommentTitle: $("#commentTitle").val(),
+                BlogScore: blogScoreValue,
+                CommentContent: $("#commentContent").val()
             };
 
             if (!commentData.CommentUserName || !commentData.CommentContent) {
@@ -30,7 +59,7 @@
                 return;
             }
 
-            $("#submitComment").prop("disabled", true); // Çift tıklamayı önle
+            $("#submitComment").prop("disabled", true); 
 
             $.ajax({
                 type: "POST",
@@ -38,8 +67,8 @@
                 data: commentData,
                 success: function (response) {
                     $("#commentMessage").text(response);
-                    $("#commentForm")[0].reset(); // Formu temizle
-                    $("#submitComment").prop("disabled", false); // Butonu tekrar aktif yap
+                    $("#commentForm")[0].reset(); 
+                    $("#submitComment").prop("disabled", false); 
                 },
                 error: function () {
                     $("#commentMessage").text("Bir hata oluştu. Lütfen tekrar deneyin.");

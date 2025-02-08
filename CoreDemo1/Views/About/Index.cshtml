@@ -1,5 +1,5 @@
 ﻿@using EntityLayer.Concrete
-@model List<About>
+@model About
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/UserLayout.cshtml";
@@ -21,20 +21,17 @@
 
 						<div class="blog_info_left_grid">
 							<a href="single.html">
-								<img src="~/web/images/b5.jpg" class="img-fluid" alt="">
+								<img src="@Model.AboutImage1" class="img-fluid" alt="">
 							</a>
 						</div>
 						<h3>
 							Biz Kimiz & Misyonumuz & Vizyonumuz
 						</h3>
-						@foreach (var item in Model)
-						{
-						<p>
-							@item.AboutDetails1
-						</p>
-						}
 						
-						<a href="single.html" class="btn btn-primary read-m">Read More</a>
+						<p>
+							@Model.AboutDetails1
+						</p>
+						
 					</div>
 			
 				</div>
@@ -51,9 +48,10 @@
 
 						
 						<div class="tech-btm">
-							<h4>Son Postlar</h4>
+							@await Component.InvokeAsync("BlogLast3Post")
+							
 
-							@await Component.InvokeAsync("WriterLastBlog")
+							
 						</div>
 					</div>
 

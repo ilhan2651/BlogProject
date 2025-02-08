@@ -10,23 +10,39 @@ using System.Threading.Tasks;
 
 namespace DataAccessLayer.Repositories.Concrete
 {
-    public class BlogRepository : GenericRepository<Blog>, IBlogRepository
+	public class BlogRepository : GenericRepository<Blog>, IBlogRepository
     {
         private readonly BlogProjectContext _context;
-        public BlogRepository(BlogProjectContext context) : base(context) 
+        public BlogRepository(BlogProjectContext context) : base(context)
         {
             _context = context;
         }
 
         public async Task<List<Blog>> GetListByBlogID(int id)
         {
-            return await  GetFilteredList(a=>a.CategoryID == id);
+            return await GetFilteredList(a => a.CategoryID == id);
         }
 
         public async Task<List<Blog>> GetListWithCategory()
-		{
-			return await _context.Blogs.Include(b => b.Category).ToListAsync();
-		}
+        {
+            return await _context.Blogs
+                .Include(b => b.Category)
+                .Include(b => b.Comments)
+                .ToListAsync();
+        }
+        public async Task<List<Blog>> GetListWithCategoryAndComments()
+        {
+            return await _context.Blogs
+                .Include(b => b.Category)
+                .Include(b => b.Comments)
+                .ToListAsync();
+        }
+
+        public async Task<Blog> GetBlogWithCategoryAndCommentsById(int id)
+        {
+
+            return  await _context.Blogs.Include(b=>b.Writer).Include(b => b.Category).Include(b => b.Comments) .FirstOrDefaultAsync(x=>x.BlogID==id);
+        }
 
         public async Task<List<Blog>> GetListWithCategoryByWriter(int id)
         {
@@ -34,6 +50,23 @@ namespace DataAccessLayer.Repositories.Concrete
                 .Include(b => b.Category)
                 .Where(b => b.WriterID == id).ToListAsync();
         }
-       
+
+		public async Task<List<Blog>> MostCommented3Post()
+		{
+			return await _context.Blogs
+                .Include(b=>b.Comments)
+                .OrderByDescending(b=>b.Comments.Count)
+                .Take(3)
+                .ToListAsync();
+		}
+        public async Task<List<Blog>> GetLast3BlogsByWriter(int id)
+        {
+            return await _context.Blogs
+                .Where(b => b.WriterID == id)
+                .OrderByDescending(b => b.BlogCreateDate) 
+                .Take(3)
+                .ToListAsync();
+        }
+
     }
 }

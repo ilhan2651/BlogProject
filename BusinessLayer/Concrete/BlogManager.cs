@@ -22,9 +22,9 @@ namespace BusinessLayer.Concrete
             return await _blogRepository.GetListByBlogID(id);
         }
 
-		public async Task<List<Blog>> GetBlogListByWriter(int id)
+		public async Task<List<Blog>> GetLast3BlogsByWriterAsync(int id)
 		{
-            return await _blogRepository.GetFilteredList(w => w.WriterID == id);
+         return await _blogRepository.GetLast3BlogsByWriter(id);
 		}
         public async Task<List<Blog>> GetListWithCategoryByWriterBm(int id)
         {
@@ -44,6 +44,21 @@ namespace BusinessLayer.Concrete
                 .ToList();
         }
 
-       
+        public async Task<List<Blog>> GetListWithCategoryAndCommentsAsync()
+        {
+            return await _blogRepository.GetListWithCategoryAndComments();
+        }
+
+        public async Task<Blog> GetBlogWithCategoryAndCommentsByIdAsync(int id)
+        {
+            return await _blogRepository.GetBlogWithCategoryAndCommentsById(id);
+        }
+
+		public async Task<List<Blog>> MostCommented3PostAsync()
+		{
+			return await _blogRepository.MostCommented3Post();
+		}
+
+      
     }
 }

@@ -1,8 +1,10 @@
 ﻿using BusinessLayer.Abstract;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CoreDemo1.Controllers
 {
+	[AllowAnonymous]
 	public class AboutController : Controller
 	{
 		private readonly IAboutService	_aboutService;
@@ -12,7 +14,7 @@ namespace CoreDemo1.Controllers
         }
         public async Task<IActionResult> Index()
 		{
-			var values = await _aboutService.TListAllAsync();
+			var values = await _aboutService.TGetByIdAsync(3);
 
 			return  View(values);
 		}

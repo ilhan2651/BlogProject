@@ -13,5 +13,11 @@ namespace DataAccessLayer.Repositories.Abstract
         Task<List<Blog>> GetListWithCategory();
         Task<List<Blog>> GetListByBlogID(int id);
         Task<List<Blog>> GetListWithCategoryByWriter(int id);
+        Task<List<Blog>> GetListWithCategoryAndComments();
+        Task<Blog> GetBlogWithCategoryAndCommentsById(int id);
+
+        Task<List<Blog>> MostCommented3Post();
+        Task<List<Blog>> GetLast3BlogsByWriter(int id);
+
     }
 }

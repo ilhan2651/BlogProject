@@ -1,6 +1,7 @@
 ﻿using DataAccessLayer.BaseRepository.Concrete;
 using DataAccessLayer.Repositories.Abstract;
 using EntityLayer.Concrete;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,5 +17,6 @@ namespace DataAccessLayer.Repositories.Concrete
         {
             _context = context;
         }
+      
     }
 }

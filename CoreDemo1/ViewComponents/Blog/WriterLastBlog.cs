@@ -10,9 +10,9 @@ namespace CoreDemo1.ViewComponents.Blog
         {
             _blogService   = blogService;
         }
-		public async Task<IViewComponentResult> InvokeAsync()
+		public async Task<IViewComponentResult> InvokeAsync(int writerId)
 		{
-			var values = await _blogService.GetBlogListByWriter(1);
+			var values = await _blogService.GetLast3BlogsByWriterAsync(writerId);
 			return View(values);
 		}
 	}

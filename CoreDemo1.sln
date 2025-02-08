@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccessLayer", "DataAcce
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusinessLayer", "BusinessLayer\BusinessLayer.csproj", "{6FF2C9F5-741E-499E-9430-841D22BF1D59}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoreLayer", "CoreLayer\CoreLayer.csproj", "{FCDB16AE-EC03-4002-9C51-D5ECA06B2A75}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jwt_Core_Kampı", "Jwt_Core_Kampı\Jwt_Core_Kampı.csproj", "{0EE995B1-DC74-4F51-9676-B47E20403D22}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +35,10 @@ Global
 		{6FF2C9F5-741E-499E-9430-841D22BF1D59}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6FF2C9F5-741E-499E-9430-841D22BF1D59}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6FF2C9F5-741E-499E-9430-841D22BF1D59}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FCDB16AE-EC03-4002-9C51-D5ECA06B2A75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FCDB16AE-EC03-4002-9C51-D5ECA06B2A75}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FCDB16AE-EC03-4002-9C51-D5ECA06B2A75}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FCDB16AE-EC03-4002-9C51-D5ECA06B2A75}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0EE995B1-DC74-4F51-9676-B47E20403D22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0EE995B1-DC74-4F51-9676-B47E20403D22}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0EE995B1-DC74-4F51-9676-B47E20403D22}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0EE995B1-DC74-4F51-9676-B47E20403D22}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

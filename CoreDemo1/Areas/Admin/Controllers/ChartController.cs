@@ -1,4 +1,5 @@
-﻿using CoreDemo1.Areas.Admin.Models;
+﻿using BusinessLayer.Abstract;
+using CoreDemo1.Areas.Admin.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CoreDemo1.Areas.Admin.Controllers
@@ -7,6 +8,11 @@ namespace CoreDemo1.Areas.Admin.Controllers
     [Route("Admin/Chart")]
     public class ChartController : Controller
     {
+        private readonly ICategoryService _categoryService;
+        public ChartController(ICategoryService categoryService)
+        {
+            _categoryService = categoryService;
+        }
         [HttpGet]
         [Route("Index")]
         public IActionResult Index()
@@ -16,21 +22,16 @@ namespace CoreDemo1.Areas.Admin.Controllers
 
         [HttpGet]
         [Route("CategoryChart")]
-        public IActionResult CategoryChart()
+        public async Task<IActionResult> CategoryChart()
         {
-            var list = new List<CategoryClass>
+            var categories = await _categoryService.GetAllCategoriesAsync();
+            var model = categories.Select(c => new CategoryIdNameViewModel
             {
-                new CategoryClass { categoryName = "Teknoloji", categoryCount = 10 },
-                new CategoryClass { categoryName = "Yazılım", categoryCount = 14 },
-                new CategoryClass { categoryName = "Spor", categoryCount = 5 },
-                new CategoryClass { categoryName = "Sinema", categoryCount = 23 },
-                new CategoryClass { categoryName = "Zeka Oyunları", categoryCount = 8 }
+                categoryCount = c.Blogs.Count(),
+                categoryName = c.CategoryName
+            }).ToList();
 
-
-
-            };
-
-            return Json(list);
+            return Json(model);
         }
     }
 }

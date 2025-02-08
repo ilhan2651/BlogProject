@@ -78,8 +78,8 @@ builder.Services.AddIdentity<AppUser, AppRole>(options =>
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
-    options.LoginPath = "/Login/Index";  // **Giriþ yapmamýþ kullanýcýlarý buraya yönlendir**
-    options.AccessDeniedPath = "/Login/AccessDenied"; // **Yetkisiz eriþimler buraya gitsin**
+    options.LoginPath = "/Login/Index";  
+    options.AccessDeniedPath = "/Login/AccessDenied"; 
     options.ExpireTimeSpan = TimeSpan.FromMinutes(60);  // Oturum süresini 60 dakika yap
 });
 

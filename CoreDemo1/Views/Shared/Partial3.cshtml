@@ -1,70 +1,115 @@
-﻿<footer>
-	<div class="container">
-		<div class="row">
-			<div class="col-lg-4 footer-grid-agileits-w3ls text-left">
-				<h3>Hakkımızda</h3>
-				<p>Bir blog ( " weblog " un kısaltılmış hali ) [ 1 ], ayrı, genellikle gayri resmi günlük tarzı metin girişlerinden (gönderiler) oluşan bilgilendirici bir web sitesidir . Gönderiler genellikle ters kronolojik sırayla görüntülenir, böylece en son gönderi ilk olarak, web sayfasının en üstünde görünür</p>
-				<div class="read">
-					<a href="/About/Index/" class="btn btn-primary read-m">Devamını Oku</a>
-				</div>
-			</div>
-			<div class="col-lg-4 footer-grid-agileits-w3ls text-left">
+﻿
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 footer-grid-agileits-w3ls text-left">
+                <h3>Hakkımızda</h3>
+                <p>Bir blog ( " weblog " un kısaltılmış hali ) [ 1 ], ayrı, genellikle gayri resmi günlük tarzı metin girişlerinden (gönderiler) oluşan bilgilendirici bir web sitesidir . Gönderiler genellikle ters kronolojik sırayla görüntülenir, böylece en son gönderi ilk olarak, web sayfasının en üstünde görünür</p>
+                <div class="read">
+                    <a href="/About/Index/" class="btn btn-primary read-m">Devamını Oku</a>
+                </div>
+            </div>
+            <div class="col-lg-4 footer-grid-agileits-w3ls text-left">
 
-				@await Component.InvokeAsync("BlogLast3Post")
+                @await Component.InvokeAsync("BlogLast3Post")
+            </div>
+            <div class="col-lg-4 footer-grid-agileits-w3ls text-left">
 
-	@* @* 		</div>
-			<!-- subscribe -->
-			<div class="col-lg-4 subscribe-main footer-grid-agileits-w3ls text-left">
-				<h2>Mail Bültenine Abone Olun</h2>
-				@await Html.PartialAsync("~/Views/Newsletter/SubscribeMail.cshtml")
+                @await Component.InvokeAsync("BlogMost3Commented")
+            </div>
+            <!-- footer -->
 
-				<!-- //subscribe -->
-			</div> *@ 
-		</div>
-		<!-- footer -->
-		<div class="footer-cpy text-center">
-			<div class="footer-social">
-				<div class="copyrighttop">
-					<ul>
-						<li class="mx-3">
-							<a class="facebook" href="#">
-								<i class="fab fa-facebook-f"></i>
-								<span>Facebook</span>
-							</a>
-						</li>
-						<li>
-							<a class="facebook" href="#">
-								<i class="fab fa-twitter"></i>
-								<span>Twitter</span>
-							</a>
-						</li>
-						<li class="mx-3">
-							<a class="facebook" href="#">
-								<i class="fab fa-google-plus-g"></i>
-								<span>Google+</span>
-							</a>
-						</li>
-						<li>
-							<a class="facebook" href="#">
-								<i class="fab fa-pinterest-p"></i>
-								<span>Pinterest</span>
-							</a>
-						</li>
-					</ul>
-
-				</div>
-			</div>
-			<div class="w3layouts-agile-copyrightbottom">
-				<p>
-					© @DateTime.Now.Year Asp.net Core 5.0 Proje Kampı All | Tüm Hakları Saklıdır | Design by
-					<a href="http://w3layouts.com/">W3layouts</a>
-				</p>
-
-			</div>
-		</div>
-
-		<!-- //footer -->
+            <div class="footer-cpy text-center">
+                <div class="footer-social">
+                    <div class="copyrighttop">
+                        <ul class="social-icons">
+                            <li>
+                                <a class="instagram" href="https://www.instagram.com/ilhan.randaa/" target="_blank">
+                                    <i class="fab fa-instagram"></i> <span>Instagram</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="twitter" href="https://x.com/ilhan2651" target="_blank">
+                                    <i class="fab fa-twitter"></i> <span>Twitter</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="github" href="https://github.com/ilhan2651" target="_blank">
+                                    <i class="fab fa-github"></i> <span>GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="linkedin" href="https://www.linkedin.com/in/ilhan-randa-951936224/" target="_blank">
+                                    <i class="fab fa-linkedin"></i> <span>LinkedIn</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom text-center">
+                <p>© 2025 Asp.net Core 5.0 Proje Kampı | Tüm Hakları Saklıdır | Design by <a href="#">W3layouts</a></p>
+            </div>
 
 
-	</div>
+
+            <!-- //footer -->
+
+
+        </div>
 </footer>
+<head>
+    <style>
+        footer h4,
+        footer h3,
+        footer h5,
+        .footer-cpy h4,
+        .footer-cpy h3,
+        .footer-cpy h5 {
+            color: white !important;
+        }
+
+
+
+        .footer-cpy {
+            padding: 20px 0;
+            background-color: #111;
+            color: #fff;
+        }
+
+        .footer-social {
+            margin-bottom: 15px;
+        }
+
+        .social-icons {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }
+
+            .social-icons li {
+                display: inline-block;
+            }
+
+            .social-icons a {
+                text-decoration: none;
+                color: #fff;
+                font-size: 16px;
+                display: flex;
+                align-items: center;
+                gap: 5px;
+            }
+
+            .social-icons i {
+                font-size: 20px;
+            }
+
+        .footer-bottom {
+            margin-top: 15px;
+            text-align: center;
+        }
+    </style>
+</head>

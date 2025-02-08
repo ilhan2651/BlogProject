@@ -8,34 +8,44 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 
 namespace CoreDemo1.Controllers
 {
     public class BlogController : Controller
     {
+        private readonly ICommentService _commentService;
         private readonly IBlogService _blogService;
         private readonly ICategoryService _categoryService;
         private readonly BlogProjectContext _context;
         private readonly UserManager<AppUser> _userManager;
-        public BlogController(IBlogService blogService, ICategoryService categoryService,BlogProjectContext context,UserManager<AppUser> userManager)
+        public BlogController(IBlogService blogService, ICategoryService categoryService,BlogProjectContext context,UserManager<AppUser> userManager,ICommentService commentService)
         {
             _blogService = blogService;
             _categoryService = categoryService;
             _context    = context;
             _userManager = userManager; 
+            _commentService = commentService;
         }
         [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
-            var values = await _blogService.GetBlogListWithCategory();
+            var values = await _blogService.GetListWithCategoryAndCommentsAsync();
             return View(values);
         }
         [AllowAnonymous]
         public async Task<IActionResult> BlogReadAll(int id)
         {
             ViewBag.i = id;
-            var values = await _blogService.TGetFilteredListAsync(x => x.BlogID == id);
-            return View(values);
+            double? averageScore = await _commentService.GetAverageScoreByBlogIdAsync(id);
+            ViewBag.AverageScore = averageScore.HasValue && averageScore > 0
+        ? averageScore.Value.ToString("0.0") + " / 10" 
+        : "Puanlanmamış";
+            var blog = await _blogService.GetBlogWithCategoryAndCommentsByIdAsync(id);
+            ViewBag.WriterId = blog.WriterID; 
+
+
+            return View(blog);
         }
         public async Task<IActionResult> BlogListByWriter()
         {

@@ -1,4 +1,5 @@
 ﻿using BusinessLayer.Abstract;
+using BusinessLayer.ValidationRules;
 using EntityLayer.Concrete;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -25,15 +26,18 @@ namespace CoreDemo1.Controllers
         [HttpPost]
         public async Task<JsonResult> PartialAddComment(Comment p)
         {
-            if (string.IsNullOrEmpty(p.CommentUserName) || string.IsNullOrEmpty(p.CommentContent))
+            CommentValidator validator= new CommentValidator();
+            var result=validator.Validate(p);
+            if (!result.IsValid)
             {
-                return Json("Ad ve Yorum alanı zorunludur!");
+                return Json(result.Errors.Select(e => e.ErrorMessage).ToList());
             }
 
             p.CommentDate = DateTime.UtcNow;
             await _commentService.TAddAsync(p);
 
             return Json("Yorum başarıyla eklendi!");
+            
         }
     }
 }
