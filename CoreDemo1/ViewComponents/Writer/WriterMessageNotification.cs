@@ -12,20 +12,20 @@ namespace CoreDemo1.ViewComponents.Writer
     {
         private readonly IMessageService _messageService;
         private readonly UserManager<AppUser> _userManager;
-        private readonly BlogProjectContext _context;
+        private readonly IWriterService _writerService;
 
             
-        public WriterMessageNotification(IMessageService messageService,UserManager<AppUser> userManager,BlogProjectContext context)
+        public WriterMessageNotification(IMessageService messageService,UserManager<AppUser> userManager,IWriterService writerService)
         {
             _messageService = messageService;
             _userManager = userManager;
-            _context = context;
+            _writerService = writerService;
         }
         public async Task<IViewComponentResult> InvokeAsync()
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
-            var writer = await _context.Writers.FirstOrDefaultAsync(x => x.AppUserId == user.Id);
-            var writerId = writer.WriterID;
+            var writer = await _writerService.GetWriterByUserIdAsync(user.Id);
+           var writerId=writer.WriterID;
             var values = await _messageService.GetInboxListByWriterOrderingDate(writerId);
             ViewBag.MessageCount= await _messageService.GetTotalMessageCount(writerId);
             return View(values);

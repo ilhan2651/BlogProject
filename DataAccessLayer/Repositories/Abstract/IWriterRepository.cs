@@ -10,7 +10,7 @@ namespace DataAccessLayer.Repositories.Abstract
 {
     public interface IWriterRepository : IGenericRepository<Writer>
     {
-
+        Task<Writer> GetWriterByUserId(int userId);
 
 	}
 }

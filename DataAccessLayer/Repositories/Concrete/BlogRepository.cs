@@ -68,5 +68,30 @@ namespace DataAccessLayer.Repositories.Concrete
                 .ToListAsync();
         }
 
+        public async Task<int> GetWriterBlogCount(int id)
+        {
+          return await _context.Blogs.Where(x => x.WriterID == id).CountAsync();
+        }
+
+        public async Task<int> GetTotalBlogsCount()
+        {
+           return await _context.Blogs.CountAsync();
+        }
+
+        public async Task<string> GetLastBlog()
+        {
+            return await _context.Blogs
+             .OrderByDescending(x => x.BlogID)
+             .Select(x => x.BlogTitle)
+             .FirstOrDefaultAsync();
+        }
+
+        public async Task<List<Blog>> GetLastThreeBlog()
+        {
+            return await  _context.Blogs
+                .OrderByDescending(b => b.BlogCreateDate)
+                .Take(3)
+                .ToListAsync();
+        }
     }
 }

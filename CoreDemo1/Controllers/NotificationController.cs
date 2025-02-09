@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CoreDemo1.Controllers
 {
+    [Authorize(Roles = "Writer")]
+
     public class NotificationController : Controller
     {
         private readonly INotificationService _notificationService;

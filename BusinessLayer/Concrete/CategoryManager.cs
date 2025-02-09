@@ -28,14 +28,16 @@ namespace BusinessLayer.Concrete
             await _categoryRepository.Update(category);
 
         }
-        public void Attach(Category category) // Attach metodu
-        {
-            _categoryRepository.Attach(category);
-        }
+        
 
         public async Task<List<Category>> GetAllCategoriesAsync()
         {
             return await _categoryRepository.GetAllCategories();
+        }
+
+        public async Task<int> GetCategoriesCountAsync()
+        {
+        return await   _categoryRepository.GetCategoriesCount();
         }
     }
 }

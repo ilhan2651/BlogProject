@@ -17,15 +17,15 @@ namespace CoreDemo1.Controllers
         private readonly ICommentService _commentService;
         private readonly IBlogService _blogService;
         private readonly ICategoryService _categoryService;
-        private readonly BlogProjectContext _context;
         private readonly UserManager<AppUser> _userManager;
-        public BlogController(IBlogService blogService, ICategoryService categoryService,BlogProjectContext context,UserManager<AppUser> userManager,ICommentService commentService)
+        private readonly IWriterService _writerService;
+        public BlogController(IBlogService blogService, ICategoryService categoryService,IWriterService writerService,UserManager<AppUser> userManager,ICommentService commentService)
         {
             _blogService = blogService;
             _categoryService = categoryService;
-            _context    = context;
             _userManager = userManager; 
             _commentService = commentService;
+            _writerService = writerService;
         }
         [AllowAnonymous]
         public async Task<IActionResult> Index()
@@ -47,14 +47,17 @@ namespace CoreDemo1.Controllers
 
             return View(blog);
         }
+        [Authorize(Roles = "Writer")]
+
         public async Task<IActionResult> BlogListByWriter()
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
-            var writer = await _context.Writers.FirstOrDefaultAsync(x=>x.AppUserId==user.Id);
+            var writer = await _writerService.GetWriterByUserIdAsync(user.Id);
            var writerId=writer.WriterID;
             var values = await _blogService.GetListWithCategoryByWriterBm(writerId);
             return View(values);
         }
+        [Authorize(Roles = "Writer")]
         [HttpGet]
         public async Task<IActionResult> BlogAdd()
         {
@@ -71,49 +74,75 @@ namespace CoreDemo1.Controllers
 
             return View(model);
         }
-        [HttpPost]
 
+        [Authorize(Roles = "Writer")]
+
+        [HttpPost]
         public async Task<IActionResult> BlogAdd(BlogAddViewModel model)
         {
-            var user =await _userManager.FindByNameAsync(User.Identity.Name);
-            var writer = await _context.Writers.FirstOrDefaultAsync(x => x.AppUserId == user.Id);
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            var writer = await _writerService.GetWriterByUserIdAsync(user.Id);
             var writerId = writer.WriterID;
+            ModelState.Remove("BlogImage");
+            ModelState.Remove("BlogThumbnailImage");
+            ModelState.Remove("Categories"); 
 
-            ModelState.Remove("Categories");
             if (!ModelState.IsValid)
             {
+
                 var categories = await _categoryService.TListAllAsync();
                 model.Categories = categories.Select(x => new SelectListItem
                 {
                     Value = x.CategoryID.ToString(),
                     Text = x.CategoryName
-                });
+                }).ToList();
 
-                return View(model);
+                return View(model); 
             }
 
-            // Veritabanına kayıt için Blog nesnesi oluşturuluyor
+            string blogImagePath = null;
+            if (model.BlogImageFile != null && model.BlogImageFile.Length > 0)
+            {
+                var uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(model.BlogImageFile.FileName);
+                var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images");
+
+                if (!Directory.Exists(uploadsFolder))
+                {
+                    Directory.CreateDirectory(uploadsFolder);
+                }
+
+                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await model.BlogImageFile.CopyToAsync(fileStream);
+                }
+
+                blogImagePath = "/images/" + uniqueFileName;
+            }
+
             var blog = new Blog
             {
                 BlogTitle = model.BlogTitle,
-                BlogImage = model.BlogImage,
-                BlogThumbnailImage = model.BlogThumbnailImage,
+                BlogImage = blogImagePath,
                 BlogContent = model.BlogContent,
                 CategoryID = model.CategoryID,
                 BlogStatus = true,
                 BlogCreateDate = DateTime.UtcNow,
                 WriterID = writerId
-            }; 
+            };
 
             await _blogService.TAddAsync(blog);
 
             return RedirectToAction("BlogListByWriter", "Blog");
         }
+        [Authorize(Roles = "Writer")]
+
         public async Task<IActionResult> DeleteBlog(int id)
         {
             await _blogService.TDeleteAsync(id);
             return RedirectToAction("BloglistByWriter");
         }
+        [Authorize(Roles = "Writer")]
         [HttpGet]
         public async Task<IActionResult> EditBlog(int id)
         {
@@ -137,19 +166,53 @@ namespace CoreDemo1.Controllers
             return View(model);
 
         }
+        [Authorize(Roles = "Writer")]
         [HttpPost]
-        public async Task<IActionResult> EditBlog(Blog p)
+        public async Task<IActionResult> EditBlog(BlogUpdateViewModel model, IFormFile BlogImageFile, IFormFile BlogThumbnailFile)
         {
-            var userMail = User.Identity.Name;
-            var writerID = _context.Writers.Where(x => x.WriterMail == userMail).Select(x => x.WriterID).FirstOrDefault();
-            p.WriterID = writerID;
-            p.BlogCreateDate = DateTime.UtcNow;
-            p.BlogStatus = true;
-            await _blogService.TUpdateAsync(p);
-            return RedirectToAction("BlogListByWriter");
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            var writer = await _writerService.GetWriterByUserIdAsync(user.Id);
+            var writerId = writer.WriterID;
 
+            var blog = await _blogService.TGetByIdAsync(model.BlogID);
+
+            if (blog != null)
+            {
+                if (BlogThumbnailFile != null)
+                {
+                    var thumbnailPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", BlogThumbnailFile.FileName);
+                    using (var stream = new FileStream(thumbnailPath, FileMode.Create))
+                    {
+                        await BlogThumbnailFile.CopyToAsync(stream);
+                    }
+                    blog.BlogThumbnailImage = "/images/" + BlogThumbnailFile.FileName; 
+                }
+
+                if (BlogImageFile != null)
+                {
+                    var imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", BlogImageFile.FileName);
+                    using (var stream = new FileStream(imagePath, FileMode.Create))
+                    {
+                        await BlogImageFile.CopyToAsync(stream);
+                    }
+                    blog.BlogImage = "/images/" + BlogImageFile.FileName; 
+                }
+
+                
+                blog.BlogTitle = model.BlogTitle;
+                blog.BlogContent = model.BlogContent;
+                blog.CategoryID = model.CategoryID;
+                blog.WriterID = writerId;
+                blog.BlogCreateDate = DateTime.UtcNow;
+                blog.BlogStatus = true;
+
+                await _blogService.TUpdateAsync(blog);
+            }
+
+            return RedirectToAction("BlogListByWriter");
         }
-       
+
+
     }
 
 }

@@ -1,15 +1,17 @@
 ﻿using BusinessLayer.Abstract;
 using EntityLayer.Concrete;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CoreDemo1.Controllers
 {
-    public class RegisterController : Controller
+    [AllowAnonymous]
+    public class AdminLogin : Controller
     {
         private readonly IWriterService _writerService;
         private readonly IValidator<Writer> _validator;
-        public RegisterController(IWriterService writerService,IValidator<Writer> validator)
+        public AdminLogin(IWriterService writerService,IValidator<Writer> validator)
         {
             _writerService = writerService;
             _validator = validator;

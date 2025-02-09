@@ -72,6 +72,7 @@ builder.Services.AddIdentity<AppUser, AppRole>(options =>
 {
     options.Password.RequireUppercase = false;
     options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequiredLength = 6;
 })
     .AddEntityFrameworkStores<BlogProjectContext>()
     .AddDefaultTokenProviders();

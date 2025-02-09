@@ -10,6 +10,7 @@ namespace BusinessLayer.Abstract
 {
     public interface IWriterService : IGenericService<Writer>
     {
-        
+        Task<Writer> GetWriterByUserIdAsync(int userId);
+
     }
 }

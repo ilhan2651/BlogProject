@@ -10,21 +10,23 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CoreDemo1.Controllers
 {
+    [Authorize(Roles = "Writer")]
+
     public class MessageController : Controller
     {
         private readonly IMessageService _messageService;
-		private readonly BlogProjectContext _context;
 		private readonly UserManager<AppUser> _userManager;
-		public MessageController(IMessageService messageService, BlogProjectContext context, UserManager<AppUser> userManager)
+        IWriterService _writerService;
+		public MessageController(IMessageService messageService, UserManager<AppUser> userManager , IWriterService writerService)
         {
             _messageService = messageService;
-            _context = context;
             _userManager = userManager;
+            _writerService = writerService;
         }
         public async Task<IActionResult> InBox()
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
-            var writer = await _context.Writers.FirstOrDefaultAsync(x => x.AppUserId == user.Id);
+            var writer = await _writerService.GetWriterByUserIdAsync(user.Id);
             var writerId = writer.WriterID;
             var values = await _messageService.GetInboxListByWriter(writerId);
             return View(values);
@@ -33,7 +35,7 @@ namespace CoreDemo1.Controllers
         public async Task<IActionResult> SendBox()
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
-            var writer = await _context.Writers.FirstOrDefaultAsync(x => x.AppUserId == user.Id);
+            var writer = await _writerService.GetWriterByUserIdAsync(user.Id);
             var writerId = writer.WriterID;
             var values=await _messageService.GetSendboxListByWriter(writerId);
             return View(values);
@@ -57,9 +59,9 @@ namespace CoreDemo1.Controllers
 		[HttpPost]
 		public async Task<IActionResult> SendMessage(Message2 message, string ReceiverMail)
 		{
-			var user = await _userManager.FindByNameAsync(User.Identity.Name);
-			var writer = await _context.Writers.FirstOrDefaultAsync(x => x.AppUserId == user.Id);
-			var writerId = writer.WriterID;
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            var writer = await _writerService.GetWriterByUserIdAsync(user.Id);
+            var writerId = writer.WriterID;
 
 
             var receiverUser = await _userManager.FindByEmailAsync(ReceiverMail);
@@ -68,7 +70,7 @@ namespace CoreDemo1.Controllers
                 ModelState.AddModelError("", "Bu e-posta adresine sahip bir kullanıcı bulunamadı.");
                 return View(message);
             }
-            var receiverWriter = await _context.Writers.FirstOrDefaultAsync(x => x.AppUserId == receiverUser.Id);
+            var receiverWriter = await _writerService.GetWriterByUserIdAsync(receiverUser.Id);
             if (receiverWriter == null)
             {
                 ModelState.AddModelError("", "Bu e-posta adresine sahip bir yazar bulunamadı.");

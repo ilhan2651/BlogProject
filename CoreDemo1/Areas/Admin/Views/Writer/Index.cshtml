@@ -42,6 +42,7 @@
                 </div>
                 <input type="text" class="form-control mb-2" id="txtwritername" placeholder="Yazar Adı">
                 <input type="text" class="form-control mb-2" id="txtwritermail" placeholder="Yazar Maili">
+                <input type="text" class="form-control mb-2" id="txtwriterusername" placeholder="Yazar Kullanıcı Adı">
                 <input type="text" class="form-control mb-2" id="txtwriterpassword1" placeholder="Yazar Şifresi">
                 <input type="text" class="form-control mb-2" id="txtwriterpassword2" placeholder="Yazar Şifresini Onayla">
 
@@ -68,6 +69,8 @@
                 </div>
                 <input type="text" class="form-control mb-2" id="txtid1" placeholder="Güncellenecek Yazar ID">
                 <input type="text" class="form-control mb-2" id="txtwriternameupd" placeholder="Güncellenecek Yazar İsmi">
+                <input type="text" class="form-control mb-2" id="txtwriterusernameupd" placeholder="Yazar Kullanıcı Adı">
+
                 <input type="text" class="form-control mb-2" id="txtwritermailupd" placeholder="Güncellenecek Yazar Maili">
                 <input type="text" class="form-control mb-2" id="txtwriterpassword1upd" placeholder="Güncellenecek Yazar Şifresi">
                 <input type="text" class="form-control mb-2" id="txtwriterpassword2upd" placeholder="Güncellenecek Yazar Şifresi Onayla">
@@ -155,6 +158,7 @@
             let writer = {
                 writerName: $("#txtwritername").val(),
                 writerMail: $("#txtwritermail").val().trim(),
+                writerUserName: $("#txtwriterusername").val().trim(),
                 writerPassword: $("#txtwriterpassword1").val().trim(),
                 confirmPassword: $("#txtwriterpassword2").val().trim()
             };
@@ -173,6 +177,7 @@
                     alert("✅ " + "Yazar Ekleme İşlemi Başarılı Bir Şekilde Gerçekleşti");
                     $("#txtwritername").val("");
                     $("#txtwritermail").val("");
+                    $("#txtwriterusername").val("");
                     $("#txtwriterpassword1").val("");
                     $("#txtwriterpassword2").val("");
                 },
@@ -206,6 +211,7 @@
             let writer = {
                 writerId: parseInt($("#txtid1").val().trim()),
                 writerName: $("#txtwriternameupd").val(),
+                writerUserName: $("#txtwriterusernameupd").val().trim(),
                 writerMail: $("#txtwritermailupd").val().trim(),
                 writerPassword: $("#txtwriterpassword1upd").val().trim(),
                 confirmPassword: $("#txtwriterpassword2upd").val().trim()
@@ -223,6 +229,7 @@
                     alert("✅ " + "Güncelleme Yapıldı");
                     $("#txtid1").val("");
                     $("#txtwriternameupd").val("");
+                    $("#txtwriterusernameupd").val("");
                     $("#txtwritermailupd").val("");
                     $("#txtwriterpassword1upd").val("");
                     $("#txtwriterpassword2upd").val("");

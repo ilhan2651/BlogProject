@@ -13,13 +13,13 @@
 @using (Html.BeginForm("SendMessage", "Message", FormMethod.Post))
 {
     @Html.Label("Alıcı")
-     @Html.TextBox("ReceiverMail" ,null, new { @class = "form-control" })
+    @Html.TextBox("ReceiverMail", null, new { @class = "form-control" ,placeholder = "Alıcı E-Posta Adresi" })
    <br />
     @Html.Label("Konu")
-    @Html.TextBoxFor(x => x.Subject, new { @class = "form-control" })
+    @Html.TextBoxFor(x => x.Subject, new { @class = "form-control", placeholder = "Konu Nedir?" })
     <br />
     @Html.Label(" Mesajınız")
-    @Html.TextAreaFor(x => x.MessageDetails, 15, 3, new { @class = "form-control" })
+    @Html.TextAreaFor(x => x.MessageDetails, 15, 3, new { @class = "form-control" ,placeholder = "Mesajınızı Yazınız" })
     <br />
     <button type="submit" class="btn btn-info">Mesajı Gönder</button>
 }

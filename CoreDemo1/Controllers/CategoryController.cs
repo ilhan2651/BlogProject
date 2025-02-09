@@ -1,4 +1,5 @@
 ﻿using BusinessLayer.Abstract;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 namespace CoreDemo1.Controllers
 {
@@ -9,6 +10,8 @@ namespace CoreDemo1.Controllers
         {
             _categoryService = categoryService;
         }
+        [Authorize(Roles = "Writer")]
+
         public async  Task<IActionResult> Index()
         {
             var values =await _categoryService.TListAllAsync();

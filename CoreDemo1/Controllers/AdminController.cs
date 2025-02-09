@@ -12,16 +12,18 @@ namespace CoreDemo1.Controllers
     public class AdminController : Controller
     {
       private readonly UserManager<AppUser> _userManager;
-        private readonly BlogProjectContext _context;
-        public AdminController(BlogProjectContext context, UserManager<AppUser> userManager)
+        public AdminController(UserManager<AppUser> userManager)
         {
             _userManager = userManager;
-            _context = context;
         }
+        [Authorize(Roles = "Admin,Moderator")]
+
         public IActionResult Index()
         {
             return View();
         }
+        [Authorize(Roles = "Admin,Moderator")]
+
         public async Task<PartialViewResult> AdminNavbarPartial()
         {
 

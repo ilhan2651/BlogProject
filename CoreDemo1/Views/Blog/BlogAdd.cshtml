@@ -8,27 +8,34 @@
 
 <h1>Yeni Blog Girişi </h1>
 <br />
-@using (Html.BeginForm("BlogAdd", "Blog", FormMethod.Post))
+@using (Html.BeginForm("BlogAdd", "Blog", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     @Html.Label("Blog Başlığı")
     @Html.TextBoxFor(x => x.BlogTitle, new { @class = "form-control" })
     @Html.ValidationMessageFor(b => b.BlogTitle, "", new { @class = "text-danger" })
     <br />
+
     @Html.Label("Blog Görseli")
-    @Html.TextBoxFor(x => x.BlogImage, new { @class = "form-control" })
-    @Html.ValidationMessageFor(b => b.BlogImage, "", new { @class = "text-danger" })
+    <input type="file" name="BlogImageFile" class="form-control" />
+    @Html.ValidationMessageFor(b => b.BlogImageFile, "", new { @class = "text-danger" })
     <br />
+
     @Html.Label("Blog Küçük Görsel")
-    @Html.TextBoxFor(x => x.BlogThumbnailImage, new { @class = "form-control" })
+    <input type="file" name="BlogThumbnailImageFile" class="form-control" />
+    @Html.ValidationMessageFor(b => b.BlogThumbnailImageFile, "", new { @class = "text-danger" })
+
     <br />
+
     @Html.Label("Blog Kategorisi")
     @Html.DropDownListFor(x => x.CategoryID, Model.Categories, "Kategori Seçiniz", new { @class = "form-control" })
     @Html.ValidationMessageFor(x => x.CategoryID, "", new { @class = "text-danger" })
-
     <br />
+
     @Html.Label("Blog İçeriği")
     @Html.TextAreaFor(x => x.BlogContent, 15, 3, new { @class = "form-control" })
     @Html.ValidationMessageFor(b => b.BlogContent, "", new { @class = "text-danger" })
     <br />
+
     <button type="submit" class="btn btn-info">Yazıyı Kaydet</button>
 }
+

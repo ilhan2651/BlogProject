@@ -1,9 +1,11 @@
 ﻿using BusinessLayer.Abstract;
 using CoreDemo1.Areas.Admin.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CoreDemo1.Areas.Admin.Controllers
 {
+    [Authorize(Roles = "Admin,Moderator")]
     [Area("Admin")]
     [Route("Admin/Chart")]
     public class ChartController : Controller

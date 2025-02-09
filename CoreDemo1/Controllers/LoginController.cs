@@ -1,4 +1,5 @@
 ﻿using BusinessLayer.Abstract;
+using BusinessLayer.Concrete;
 using CoreDemo1.Models;
 using DataAccessLayer.BaseRepository.Concrete;
 using EntityLayer.Concrete;
@@ -17,11 +18,11 @@ namespace CoreDemo1.Controllers
     public class LoginController : Controller
     {
         private readonly SignInManager<AppUser> _signInManager;
-        private readonly BlogProjectContext _context;
-        public LoginController(BlogProjectContext context, SignInManager<AppUser> signInManager)
+        private readonly UserManager<AppUser> _userManager;
+        public LoginController(SignInManager<AppUser> signInManager, UserManager<AppUser> userManager)
         {
             _signInManager = signInManager;
-            _context = context;
+            _userManager = userManager;
         }
         [AllowAnonymous]
         public IActionResult Index()
@@ -39,21 +40,35 @@ namespace CoreDemo1.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await _signInManager.PasswordSignInAsync(model.UserName, model.Password, false, true);
-                if (result.Succeeded)
+                var user = await _userManager.FindByNameAsync(model.UserName);
+                if (user != null)
                 {
-                    return RedirectToAction("Index", "Dashboard");
+                    var result = await _signInManager.PasswordSignInAsync(model.UserName, model.Password, false, true);
+                    if (result.Succeeded)
+                    {
+                        var roles = await _userManager.GetRolesAsync(user);
+
+                        if (roles.Contains("Admin") || roles.Contains("Moderator"))
+                        {
+                            return RedirectToAction("Index", "Widget", new { area = "Admin" });
+                        }
+                        else if (roles.Contains("Writer"))
+                        {
+                            return RedirectToAction("Index","Dashboard");
+                        }
+                        
+                        else
+                        {
+                            return RedirectToAction("Index", "Blog");
+                        }
+                    }
                 }
-                else
-                {
-                    ModelState.AddModelError("", "Kullanıcı adı veya şifre hatalı!");
-                    return View(model); 
-                }
+
+                ModelState.AddModelError("", "Kullanıcı adı veya şifre hatalı!");
             }
             return View(model);
-
-
         }
+
         public async Task<IActionResult> LogOut()
         {
             await _signInManager.SignOutAsync();

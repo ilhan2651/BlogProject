@@ -1,6 +1,7 @@
 ﻿using DataAccessLayer.BaseRepository.Concrete;
 using DataAccessLayer.Repositories.Abstract;
 using EntityLayer.Concrete;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,11 @@ namespace DataAccessLayer.Repositories.Concrete
         public ContactRepository(BlogProjectContext context):base(context)
         {
           _context = context;
+        }
+
+        public async Task<int> GetContactCount()
+        {
+            return await _context.Contacts.CountAsync();
         }
     }
 }

@@ -17,6 +17,10 @@ namespace DataAccessLayer.Repositories.Concrete
         {
             _context = context;
         }
-      
+
+        public async Task<Writer> GetWriterByUserId(int userId)
+        {
+            return await _context.Writers.FirstOrDefaultAsync(x => x.AppUserId == userId);
+        }
     }
 }

@@ -31,6 +31,10 @@ namespace DataAccessLayer.Repositories.Concrete
                 .AverageAsync() ?? 0; 
         }
 
+        public async Task<int> GetCommentCount()
+        {
+            return await _context.Comments .CountAsync();
+        }
     }
 }
  

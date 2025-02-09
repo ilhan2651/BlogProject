@@ -520,6 +520,10 @@ namespace DataAccessLayer.Migrations
                     b.Property<bool>("WriterStatus")
                         .HasColumnType("boolean");
 
+                    b.Property<string>("WriterUserName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.HasKey("WriterID");
 
                     b.HasIndex("AppUserId")

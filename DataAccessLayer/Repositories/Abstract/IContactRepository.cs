@@ -10,5 +10,6 @@ namespace DataAccessLayer.Repositories.Abstract
 {
     public interface IContactRepository : IGenericRepository<Contact>
     {
+        Task<int> GetContactCount();
     }
 }

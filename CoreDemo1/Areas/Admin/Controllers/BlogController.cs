@@ -2,12 +2,14 @@
 using ClosedXML.Excel;
 using CoreDemo1.Areas.Admin.Models;
 using DataAccessLayer.BaseRepository.Concrete;
-using DocumentFormat.OpenXml.Bibliography;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CoreDemo1.Areas.Admin.Controllers
-{ 
+{
     [Area("Admin")]
+    [Authorize(Roles = "Admin,Moderator")]
+
     public class BlogController : Controller
     {
         private readonly BlogProjectContext _context;

@@ -14,10 +14,7 @@ namespace CoreDemo1.Controllers
         {
             _commentService = commentService;
         }
-        public IActionResult Index()
-		{
-			return View();
-		}
+		
         [HttpGet]
         public PartialViewResult PartialAddComment()
         {

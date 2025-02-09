@@ -1,31 +1,31 @@
 ﻿using BusinessLayer.Abstract;
-using DataAccessLayer.BaseRepository.Concrete;
-using DocumentFormat.OpenXml.Bibliography;
 using EntityLayer.Concrete;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using X.PagedList.Extensions;
 
 namespace CoreDemo1.Areas.Admin.Controllers
-{ 
+{
     [Area("Admin")]
+    [Authorize(Roles = "Admin,Moderator")]
+
     public class AdminMessageController : Controller
     {
         private readonly IMessageService _messageService;
-        private readonly BlogProjectContext _context;
+        private readonly IWriterService _writerService;
         private readonly UserManager<AppUser> _userManager;
-        public AdminMessageController(IMessageService messageService, BlogProjectContext context, UserManager<AppUser> userManager)
+        public AdminMessageController(IMessageService messageService,IWriterService writerService, UserManager<AppUser> userManager)
         {
             _messageService = messageService;
-            _context = context;
             _userManager = userManager;
+            _writerService = writerService;
         }
         public async Task<IActionResult> InBox(int page = 1)
         {
 
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
-            var writer = await _context.Writers.FirstOrDefaultAsync(x => x.AppUserId == user.Id);
+            var writer = await _writerService.GetWriterByUserIdAsync(user.Id);
             var writerId = writer.WriterID;
             var values = await _messageService.GetInboxListByWriter(writerId);
             ViewBag.InBoxCount = (await _messageService.GetInboxListByWriter(writerId))?.Count() ?? 0;
@@ -38,7 +38,7 @@ namespace CoreDemo1.Areas.Admin.Controllers
         public async Task<IActionResult> SendBox(int page=1)
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
-            var writer = await _context.Writers.FirstOrDefaultAsync(x => x.AppUserId == user.Id);
+            var writer = await _writerService.GetWriterByUserIdAsync(user.Id);
             var writerId = writer.WriterID;
             var values = await _messageService.GetSendboxListByWriter(writerId);
             ViewBag.InBoxUnreadCount = (await _messageService.GetInboxListByWriter(writerId))
@@ -50,7 +50,7 @@ namespace CoreDemo1.Areas.Admin.Controllers
         public async Task<IActionResult> MessageDetail(int id)
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
-            var writer = await _context.Writers.FirstOrDefaultAsync(x => x.AppUserId == user.Id);
+            var writer = await _writerService.GetWriterByUserIdAsync(user.Id);
             var writerId = writer.WriterID;
             ViewBag.InBoxUnreadCount = (await _messageService.GetInboxListByWriter(writerId))
                                ?.Count(m => !m.IsRead) ?? 0;
@@ -65,7 +65,7 @@ namespace CoreDemo1.Areas.Admin.Controllers
         public async Task<IActionResult> MessageDetailSendbox(int id)
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
-            var writer = await _context.Writers.FirstOrDefaultAsync(x => x.AppUserId == user.Id);
+            var writer = await _writerService.GetWriterByUserIdAsync(user.Id);
             var writerId = writer.WriterID;
             ViewBag.InBoxUnreadCount = (await _messageService.GetInboxListByWriter(writerId))
                                ?.Count(m => !m.IsRead) ?? 0;
@@ -80,7 +80,7 @@ namespace CoreDemo1.Areas.Admin.Controllers
         public async Task<IActionResult> ComposeMessage() 
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
-            var writer = await _context.Writers.FirstOrDefaultAsync(x => x.AppUserId == user.Id);
+            var writer = await _writerService.GetWriterByUserIdAsync(user.Id);
             var writerId = writer.WriterID;
             ViewBag.InBoxUnreadCount = (await _messageService.GetInboxListByWriter(writerId))
                               ?.Count(m => !m.IsRead) ?? 0;
@@ -90,9 +90,9 @@ namespace CoreDemo1.Areas.Admin.Controllers
         public async Task<IActionResult> ComposeMessage(Message2 message,string ReceiverMail)
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
-            var writer = await _context.Writers.FirstOrDefaultAsync(x => x.AppUserId == user.Id);
+            var writer = await _writerService.GetWriterByUserIdAsync(user.Id);
             var receiverUser = await _userManager.FindByEmailAsync(ReceiverMail);
-            var receiverWriter = await _context.Writers.FirstOrDefaultAsync(x => x.AppUserId == receiverUser.Id);
+            var receiverWriter = await _writerService.GetWriterByUserIdAsync(receiverUser.Id);
             
             if (receiverWriter == null)
             {

@@ -37,11 +37,7 @@ namespace BusinessLayer.Concrete
 		}
         public  async Task<List<Blog>> GetLastThreeBlog()
         {
-            var allBlogs = await _blogRepository.ListAll();
-            return allBlogs
-                .OrderByDescending(b=>b.BlogCreateDate)
-                .Take(3)
-                .ToList();
+           return await _blogRepository.GetLastThreeBlog();
         }
 
         public async Task<List<Blog>> GetListWithCategoryAndCommentsAsync()
@@ -59,6 +55,19 @@ namespace BusinessLayer.Concrete
 			return await _blogRepository.MostCommented3Post();
 		}
 
-      
+        public async Task<int> GetWriterBlogCountAsync(int id)
+        {
+            return await _blogRepository.GetWriterBlogCount(id);
+        }
+
+        public async Task<int> GetTotalBlogsCountAsync()
+        {
+            return await _blogRepository.GetTotalBlogsCount();
+        }
+
+        public async Task<string> GetLastBlogAsync()
+        {
+            return await _blogRepository.GetLastBlog();
+        }
     }
 }

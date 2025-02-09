@@ -2,11 +2,7 @@
 using DataAccessLayer.Repositories.Abstract;
 using EntityLayer.Concrete;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace DataAccessLayer.Repositories.Concrete
 {
@@ -17,6 +13,13 @@ namespace DataAccessLayer.Repositories.Concrete
         {
             _context = context;
         }
-      
+
+        public async Task<List<Notification>> GetLastFiveNotification()
+        {
+         return await    _context.Notifications.Where(n => n.NotificationStatus == true)
+           .OrderByDescending(n => n.NotificationID)
+           .Take(5)
+           .ToListAsync();
+        }
     }
 }

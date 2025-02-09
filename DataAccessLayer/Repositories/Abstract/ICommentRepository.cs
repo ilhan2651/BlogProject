@@ -12,6 +12,7 @@ namespace DataAccessLayer.Repositories.Abstract
     {
         public Task<List<Comment>> GetListWithBlog();
         Task<double> GetAverageScoreByBlogId(int blogId);
+        Task<int> GetCommentCount();
 
     }
 }

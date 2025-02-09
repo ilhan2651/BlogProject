@@ -1,9 +1,12 @@
 ﻿using BusinessLayer.Abstract;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CoreDemo1.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin,Moderator")]
+
     public class AdminBlogController : Controller
     {
         private readonly IBlogService _blogService;

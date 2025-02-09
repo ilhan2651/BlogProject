@@ -12,6 +12,7 @@ namespace BusinessLayer.Abstract
 		Task<List<Comment>> GetListByBlogId(int id);
         Task<List<Comment>> GetCommenWithBlog();
         Task<double> GetAverageScoreByBlogIdAsync(int blogId);
+        Task<int> GetCommentCountAsync();
 
 
     }

@@ -10,7 +10,7 @@ namespace DataAccessLayer.Repositories.Abstract
 {
     public interface ICategoryRepository : IGenericRepository<Category>
     {
-        void Attach(Category category);
+        Task<int> GetCategoriesCount();
 
         Task<List<Category>> GetAllCategories();
     }

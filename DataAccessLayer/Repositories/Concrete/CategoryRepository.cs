@@ -28,6 +28,10 @@ namespace DataAccessLayer.Repositories.Concrete
             return await _context.Categories
                 .Include(b => b.Blogs).ToListAsync();
         }
+        public async Task<int> GetCategoriesCount()
+        {
+            return await _context.Categories.CountAsync();
+        }
        
     }
 }

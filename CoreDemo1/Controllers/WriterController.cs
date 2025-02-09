@@ -10,47 +10,28 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CoreDemo1.Controllers
 {
+    [Authorize(Roles = "Writer")]
 
     public class WriterController : Controller
     {
         private readonly IWriterService _writerService;
-        private readonly BlogProjectContext _context;
         private readonly UserManager<AppUser> _userManager;
-        public WriterController(IWriterService writerService ,BlogProjectContext context,UserManager<AppUser> userManager)
+        public WriterController(IWriterService writerService ,UserManager<AppUser> userManager)
         {
             _writerService = writerService;
-            _context = context;
             _userManager = userManager;
         }
-        [Authorize]
         public IActionResult Index()
         {
             var userName = User.Identity.Name;
             ViewBag.v1= userName;
             return View();
         }
-        public IActionResult WriterProfile()
-        {
-            return View();
-        }
 
-        public IActionResult WriterMail()
-        {
-
-            return View();
-        }
-        [AllowAnonymous]
-        public IActionResult Test()
-        {
-            return View();
-        }
-
-        [AllowAnonymous]
         public PartialViewResult WriterNavbarPartial()
         {
             return PartialView();
         }
-        [AllowAnonymous]
 
         public PartialViewResult WriterFooterPArtial()
         {
@@ -63,7 +44,7 @@ namespace CoreDemo1.Controllers
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
             if (user != null)
             {
-                var writer = await _context.Writers.FirstOrDefaultAsync(w => w.AppUserId == user.Id);
+                var writer = await _writerService.GetWriterByUserIdAsync(user.Id);
                 var writerId = writer.WriterID;
                 var writerValues = await _writerService.TGetByIdAsync(writerId);
                 return View(writerValues);
@@ -72,8 +53,9 @@ namespace CoreDemo1.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> WriterEditProfile(Writer writer)
+        public async Task<IActionResult> WriterEditProfile(Writer writer, IFormFile WriterImageFile)
         {
+
             var validator = new WriterUpdateValidator();
             var results = validator.Validate(writer);
             if (!results.IsValid)
@@ -90,46 +72,78 @@ namespace CoreDemo1.Controllers
             {
                 ModelState.AddModelError("", "Kullanıcı bulunamadı.");
                 return View(writer);
-            }          
+            }
 
-            var existingWriter = await _context.Writers.FirstOrDefaultAsync(w => w.AppUserId == user.Id);
+            var existingWriter = await _writerService.GetWriterByUserIdAsync(user.Id);
             if (existingWriter == null)
             {
                 ModelState.AddModelError("", "Yazar bulunamadı.");
                 return View(writer);
+            }
 
-            }
-            if (string.IsNullOrEmpty(writer.WriterPassword))
+            if (WriterImageFile != null && WriterImageFile.Length > 0)
             {
-                writer.WriterPassword = existingWriter.WriterPassword;
+                var uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(WriterImageFile.FileName);
+                var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images");
+                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await WriterImageFile.CopyToAsync(fileStream);
+                }
+
+                existingWriter.WriterImage = "/images/" + uniqueFileName;
             }
-            if (!string.IsNullOrEmpty(writer.WriterPassword))
+
+            if (!string.IsNullOrWhiteSpace(writer.WriterPassword))
             {
                 var removePasswordResult = await _userManager.RemovePasswordAsync(user);
+                if (!removePasswordResult.Succeeded)
+                {
+                    foreach (var error in removePasswordResult.Errors)
+                    {
+                        ModelState.AddModelError("", $"Şifre kaldırma hatası: {error.Description}");
+                    }
+                    return View(writer);
+                }
+
                 var addPasswordResult = await _userManager.AddPasswordAsync(user, writer.WriterPassword);
+                if (!addPasswordResult.Succeeded)
+                {
+                    foreach (var error in addPasswordResult.Errors)
+                    {
+                        ModelState.AddModelError("", $"Şifre ekleme hatası: {error.Description}");
+                    }
+                    return View(writer);
+                }
+
+                var passwordHasher = new PasswordHasher<Writer>();
+                existingWriter.WriterPassword = passwordHasher.HashPassword(existingWriter, writer.WriterPassword);
+                existingWriter.ConfirmPassword = passwordHasher.HashPassword(existingWriter, writer.WriterPassword);
             }
-                     
-            if (string.IsNullOrEmpty(writer.ConfirmPassword))
-            {
-                writer.ConfirmPassword = existingWriter.ConfirmPassword;
-            }
-            var passwordHasher = new PasswordHasher<Writer>();
+
             existingWriter.WriterName = writer.WriterName;
             existingWriter.WriterMail = writer.WriterMail;
-            existingWriter.WriterPassword = passwordHasher.HashPassword(existingWriter, writer.WriterPassword);
             existingWriter.WriterAbout = writer.WriterAbout;
-            existingWriter.WriterImage = writer.WriterImage;
-            existingWriter.ConfirmPassword= passwordHasher.HashPassword(existingWriter, writer.ConfirmPassword);
-
-            _context.Entry(existingWriter).Property(x => x.AppUserId).IsModified = false;
-
+            existingWriter.AppUserId=existingWriter.AppUserId;
             await _writerService.TUpdateAsync(existingWriter);
+
+            user.Email = writer.WriterMail;
+            user.NameSurname = writer.WriterName;
+            var updateUserResult = await _userManager.UpdateAsync(user);
+            if (!updateUserResult.Succeeded)
+            {
+                foreach (var error in updateUserResult.Errors)
+                {
+                    ModelState.AddModelError("", $"Kullanıcı bilgileri güncellenirken hata oluştu: {error.Description}");
+                }
+                return View(writer);
+            }
 
             return RedirectToAction("Index", "Dashboard");
         }
 
 
-        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> WriterAdd()
         {

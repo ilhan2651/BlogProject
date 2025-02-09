@@ -18,7 +18,8 @@ namespace EntityLayer.Concrete
         [ForeignKey("AppUser")]
         public int AppUserId { get; set; }
         public AppUser AppUser { get; set; }
-        public string WriterName { get; set; }
+        public string WriterName { get; set; } 
+        public string WriterUserName { get; set; }
         public string WriterAbout { get; set; } 
         public string? WriterImage { get; set; }
         public string WriterMail { get; set; }

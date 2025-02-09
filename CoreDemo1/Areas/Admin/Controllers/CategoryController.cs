@@ -1,15 +1,14 @@
 ﻿using BusinessLayer.Abstract;
 using BusinessLayer.ValidationRules;
 using EntityLayer.Concrete;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using X.PagedList;
 using X.PagedList.Extensions;
-using X.PagedList.Mvc.Core;
 namespace CoreDemo1.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin,Moderator")]
+
     public class CategoryController : Controller
     {
         private readonly ICategoryService _categoryService;

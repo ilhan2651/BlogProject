@@ -12,11 +12,8 @@ namespace CoreDemo1.ViewComponents.Writer
         }
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var notifications = await _notificationService.TListAllAsync();
-         var filteredNotifications= notifications.Where(n => n.NotificationStatus == true)
-          .OrderByDescending(n => n.NotificationID)
-          .Take(5)
-          .ToList();
+            var notifications = await _notificationService.GetLastFiveNotificationAsync();
+         
             return View(notifications);
 
         }

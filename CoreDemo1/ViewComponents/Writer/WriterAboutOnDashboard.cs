@@ -11,34 +11,23 @@ namespace CoreDemo1.ViewComponents.Writer
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly IWriterService _writerService;
-        private readonly BlogProjectContext _context;
 
-        public WriterAboutOnDashboard(IWriterService writerService, BlogProjectContext context,UserManager<AppUser> userManager)
+        public WriterAboutOnDashboard(IWriterService writerService, UserManager<AppUser> userManager)
         {
             _writerService = writerService;
-            _context = context;
             _userManager = userManager;
         }
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            //var user = await _userManager.FindByNameAsync(User.Identity.Name);
-            //if (user != null)
-            //{
-            //    var writer = await _context.Writers.FirstOrDefaultAsync(w => w.AppUserId == user.Id);
-            //    var writerId = writer.WriterID;
-            //    var writerValues = await _writerService.TGetByIdAsync(writerId);
-            //    return View(writerValues);
-            //}
+
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
-            if (user != null)
-            {
-                var writer = await _context.Writers.FirstOrDefaultAsync(w => w.AppUserId == user.Id);
-                var writerId = writer.WriterID;
-                var writerValues = await _writerService.TGetByIdAsync(writerId);
+            var writer = await _writerService.GetWriterByUserIdAsync(user.Id);
+            var writerId = writer.WriterID;
+            var writerValues = await _writerService.TGetByIdAsync(writerId);
                 return View(writerValues);
-            }
-            return View();
+            
+            
         }
     }
 }

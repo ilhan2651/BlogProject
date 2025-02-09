@@ -6,26 +6,35 @@
 
 <h1>Blog Düzenleme Sayfası</h1>
 <br />
-@using(Html.BeginForm("EditBlog","Blog",FormMethod.Post))
+
+@using (Html.BeginForm("EditBlog", "Blog", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
-    @Html.Label("Blog ID")
-    @Html.TextBoxFor(b=>b.BlogID,new {@class ="form-control"})
-    <br />
+    @Html.HiddenFor(b => b.BlogID) 
     @Html.Label("Blog Başlığı")
     @Html.TextBoxFor(b => b.BlogTitle, new { @class = "form-control" })
     <br />
-    @Html.Label("Blog ThumbNail Url")
-    @Html.TextBoxFor(b => b.BlogThumbnailImage, new { @class = "form-control" })
-    <br />
-    @Html.Label("Blog Görseli")
-    @Html.TextBoxFor(b => b.BlogImage, new { @class = "form-control" })
-    <br />
-    @Html.Label("Blog Kategori")
-    @Html.DropDownListFor(b => b.CategoryID,Model.Categories,"Kategori Seçiniz", new { @class = "form-control" })
-    <br />
-    @Html.Label("Blog İçeriği")
-    @Html.TextAreaFor(b => b.BlogContent,10,3, new { @class = "form-control" })
-    <br />
-    <button class="btn btn-success">Güncelle</button>
 
+    @Html.Label("Mevcut Blog Küçük Görseli")
+    <img src="@Model.BlogThumbnailImage" class="img-thumbnail" width="150" height="100" />
+    <br />
+    @Html.Label("Yeni Blog Küçük Görseli Yükleyin")
+    <input type="file" name="BlogThumbnailFile" class="form-control" />
+    <br />
+
+    @Html.Label("Mevcut Blog Görseli")
+    <img src="@Model.BlogImage" class="img-thumbnail" width="150" height="100" />
+    <br />
+    @Html.Label("Yeni Blog Görseli Yükleyin")
+    <input type="file" name="BlogImageFile" class="form-control" />
+    <br />
+
+    @Html.Label("Blog Kategori")
+    @Html.DropDownListFor(b => b.CategoryID, Model.Categories, "Kategori Seçiniz", new { @class = "form-control" })
+    <br />
+
+    @Html.Label("Blog İçeriği")
+    @Html.TextAreaFor(b => b.BlogContent, 10, 3, new { @class = "form-control" })
+    <br />
+
+    <button class="btn btn-success">Güncelle</button>
 }

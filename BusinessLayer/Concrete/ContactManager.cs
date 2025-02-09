@@ -16,5 +16,10 @@ namespace BusinessLayer.Concrete
         {
             _contactRepository  = contactRepository;
         }
+
+        public async Task<int> GetContactCountAsync()
+        {
+            return await _contactRepository.GetContactCount();
+        }
     }
 }

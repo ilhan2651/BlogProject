@@ -12,11 +12,15 @@ namespace BusinessLayer.Concrete
     public class WriterManager : GenericManager<Writer> ,IWriterService
     {
         private readonly IWriterRepository _writerRepository;
+        private readonly UserManager _userManager;
         public WriterManager(IWriterRepository writerRepository):base(writerRepository) 
-        {
+        {   
             _writerRepository = writerRepository;
         }
 
-		
-	}
+        public async Task<Writer> GetWriterByUserIdAsync(int userId)
+        {
+            return await _writerRepository.GetWriterByUserId(userId);
+        }
+    }
 }

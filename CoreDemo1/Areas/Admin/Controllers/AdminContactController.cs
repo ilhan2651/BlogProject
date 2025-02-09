@@ -1,10 +1,11 @@
 ﻿using BusinessLayer.Abstract;
-using DataAccessLayer.Repositories.Abstract;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CoreDemo1.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin,Moderator")]
 
     public class AdminContactController : Controller
     {

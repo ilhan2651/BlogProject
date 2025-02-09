@@ -7,19 +7,21 @@ namespace CoreDemo1.Areas.Admin.ViewComponents.Statistic
 {
     public class Statistic1 : ViewComponent
     {
-        private readonly BlogProjectContext _context;
         private readonly IBlogService _blogService;
-        public Statistic1(IBlogService blogService, BlogProjectContext context)
+        private readonly IContactService _contactService;
+        private readonly ICommentService _commentService;
+        public Statistic1(IBlogService blogService, IContactService contactService,ICommentService commentService)
         {
             _blogService = blogService;
-            _context = context;
-        }
+            _contactService = contactService;
+            _commentService = commentService;
+        } 
         public async Task<IViewComponentResult> InvokeAsync()
         {
             var blogs = await _blogService.TListAllAsync();
-            ViewBag.v1 = blogs.Count;
-            ViewBag.v2 = _context.Contacts.Count();
-            ViewBag.v3 = _context.Comments.Count();
+            ViewBag.v1 = await _blogService.GetTotalBlogsCountAsync();
+            ViewBag.v2 = await _contactService.GetContactCountAsync();
+            ViewBag.v3 = await _commentService.GetCommentCountAsync();
 
 
             string api = "f91caf72f8a161e4f34323a9e777759d";

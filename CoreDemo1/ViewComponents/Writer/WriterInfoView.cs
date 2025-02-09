@@ -1,4 +1,5 @@
-﻿using BusinessLayer.Concrete;
+﻿using BusinessLayer.Abstract;
+using BusinessLayer.Concrete;
 using DataAccessLayer.BaseRepository.Concrete;
 using DocumentFormat.OpenXml.Spreadsheet;
 using EntityLayer.Concrete;
@@ -13,37 +14,26 @@ namespace CoreDemo1.ViewComponents.Writer
         private readonly UserManager<AppUser> _userManager;
         private readonly BlogProjectContext _context;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IWriterService _writerService;
 
-        public WriterInfoView(UserManager<AppUser> userManager, BlogProjectContext context, IHttpContextAccessor httpContextAccessor)
+        public WriterInfoView(UserManager<AppUser> userManager,IWriterService writerService)
         {
             _userManager = userManager;
-            _context = context;
-            _httpContextAccessor = httpContextAccessor;
+            _writerService= writerService;
         }
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var userName = _httpContextAccessor.HttpContext.User.Identity.Name;
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            var writer = await _writerService.GetWriterByUserIdAsync(user.Id);
+            var writerId = writer.WriterID;
 
-            if (string.IsNullOrEmpty(userName))
-            {
-                return View("Default", "Misafir"); // Kullanıcı giriş yapmamışsa
-            }
-
-            var user = await _userManager.FindByNameAsync(userName); // async bekletiyoruz
-
-            if (user == null)
-            {
-                return View("Default", "Misafir");
-            }
-
-            var writer = await _context.Writers.FirstOrDefaultAsync(x => x.AppUserId == user.Id); // async bekletiyoruz
-
+         
             if (writer == null)
             {
                 return View("Default", "Bilinmeyen Yazar");
             }
 
-            return View("Default", writer); // View'e writer adı gönderiliyor
+            return View("Default", writer);
         }
 
     }

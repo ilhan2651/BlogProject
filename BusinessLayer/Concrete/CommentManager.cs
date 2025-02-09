@@ -22,6 +22,11 @@ namespace BusinessLayer.Concrete
            return await _commentRepository.GetAverageScoreByBlogId(blogId);
         }
 
+        public async Task<int> GetCommentCountAsync()
+        {
+            return await _commentRepository.GetCommentCount();
+        }
+
         public async Task<List<Comment>> GetCommenWithBlog()
         {
             return await   _commentRepository.GetListWithBlog();

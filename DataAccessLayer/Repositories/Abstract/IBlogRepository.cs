@@ -18,6 +18,10 @@ namespace DataAccessLayer.Repositories.Abstract
 
         Task<List<Blog>> MostCommented3Post();
         Task<List<Blog>> GetLast3BlogsByWriter(int id);
+        Task<int> GetWriterBlogCount(int id);
+        Task<int> GetTotalBlogsCount();
+        Task<string> GetLastBlog();
+        Task<List<Blog>> GetLastThreeBlog();
 
     }
 }

@@ -19,6 +19,12 @@ namespace BusinessLayer.Abstract
         Task<Blog> GetBlogWithCategoryAndCommentsByIdAsync(int id);
         Task<List<Blog>> MostCommented3PostAsync();
         Task<List<Blog>> GetLast3BlogsByWriterAsync(int id);
+        Task<int> GetWriterBlogCountAsync(int id);
+        Task<int> GetTotalBlogsCountAsync();
+        Task<string> GetLastBlogAsync();
+
+
+
 
 
     }

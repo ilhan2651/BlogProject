@@ -1,10 +1,12 @@
 ﻿using BusinessLayer.Abstract;
-using DocumentFormat.OpenXml.Office2010.Excel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CoreDemo1.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin,Moderator")]
+
     public class AdminCommentController : Controller
     {
         private readonly ICommentService _commentService;
