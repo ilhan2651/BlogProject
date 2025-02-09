@@ -35,13 +35,18 @@ namespace DataAccessLayer.Repositories.Concrete
             return await _context.Blogs
                 .Include(b => b.Category)
                 .Include(b => b.Comments)
+                .OrderByDescending(x => x.BlogCreateDate)
                 .ToListAsync();
         }
 
         public async Task<Blog> GetBlogWithCategoryAndCommentsById(int id)
         {
 
-            return  await _context.Blogs.Include(b=>b.Writer).Include(b => b.Category).Include(b => b.Comments) .FirstOrDefaultAsync(x=>x.BlogID==id);
+            return  await _context.Blogs
+                .Include(b=>b.Writer)
+                .Include(b => b.Category)
+                .Include(b => b.Comments)
+                .FirstOrDefaultAsync(x=>x.BlogID==id);
         }
 
         public async Task<List<Blog>> GetListWithCategoryByWriter(int id)
