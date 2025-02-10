@@ -17,12 +17,12 @@ using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
+var connectionString = Environment.GetEnvironmentVariable("DATABASE_URL") ?? builder.Configuration.GetConnectionString("SqlConnection");
 builder.Services.AddDbContext<BlogProjectContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("SqlConnection")));
-builder.Services.AddControllersWithViews();
+    options.UseNpgsql(connectionString));
 
-builder.Services.AddFluentValidationAutoValidation()  // Otomatik ModelState validasyonu
-                .AddFluentValidationClientsideAdapters();  // Client-side validasyon
+builder.Services.AddFluentValidationAutoValidation()
+                .AddFluentValidationClientsideAdapters();
 
 builder.Services.AddValidatorsFromAssemblyContaining<BlogValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<WriterValidator>();
@@ -79,8 +79,8 @@ builder.Services.AddIdentity<AppUser, AppRole>(options =>
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
-    options.LoginPath = "/Login/Index";  
-    options.AccessDeniedPath = "/Login/AccessDenied"; 
+    options.LoginPath = "/Login/Index";
+    options.AccessDeniedPath = "/Login/AccessDenied";
     options.ExpireTimeSpan = TimeSpan.FromMinutes(60);  // Oturum süresini 60 dakika yap
 });
 

@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: CoreDemo1
+    runtime: dotnet
+    buildCommand: "dotnet publish -c Release -o out"
+    startCommand: "dotnet out/CoreDemo1.dll"
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: DATABASE_URL
+        value: postgres://your-db-user:your-db-password@your-db-host:5432/your-db-name
