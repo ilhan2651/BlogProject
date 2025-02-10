@@ -89,6 +89,24 @@ Ensured that notifications created in the admin panel are visible to all authors
 License
 This project is licensed under the MIT License.
 
+![Image](https://github.com/user-attachments/assets/b1b560c3-feb1-4fd8-b209-579ff9efc203)
 
+![Image](https://github.com/user-attachments/assets/8c614c12-ab9d-484d-ac65-f49fec02bfd4)
+![Image](https://github.com/user-attachments/assets/31e6aca9-b164-41f6-8e0e-81cd7e38f332)
+![Image](https://github.com/user-attachments/assets/c07450a0-8cd1-442a-8765-a2a401b0df41)
+![Image](https://github.com/user-attachments/assets/93495449-2f5b-4c87-a899-1f2dcc0116ca)
+![Image](https://github.com/user-attachments/assets/0f7f3b91-c8ab-42b0-8dde-8f8c5688ddba)
+![Image](https://github.com/user-attachments/assets/32f43923-2c13-45a1-9b2c-60c515d9d199)
+![Image](https://github.com/user-attachments/assets/440e5026-456a-49da-9040-c2bc0bcad6cb)
+![Image](https://github.com/user-attachments/assets/263c853e-ed30-49df-b583-ff0066f32a54)
+![Image](https://github.com/user-attachments/assets/303263ca-ffdd-4c0e-8dfd-ea57d2bb0d30)
+![Image](https://github.com/user-attachments/assets/522bdfd0-bb74-459f-a8a8-b5af4603ae37)
+![Image](https://github.com/user-attachments/assets/ae7cdf63-8e16-4d6d-9da5-2f0bce99b335)
+![Image](https://github.com/user-attachments/assets/3df6b101-a7c8-481a-b423-2d4364a543a8)
+![Image](https://github.com/user-attachments/assets/f5b9f423-5e13-4035-af67-8ea0841cc6db)
+![Image](https://github.com/user-attachments/assets/d45e39a5-cefe-4373-b0fa-4827dd2cbab2)
+![Image](https://github.com/user-attachments/assets/6dcdcf6e-c09a-4209-8e4d-edcd18602cf6)
+![Image](https://github.com/user-attachments/assets/e300865d-8a6b-49b6-bea1-79ef3d6af3ac)
+![Image](https://github.com/user-attachments/assets/f445de50-6ab3-446d-9cf4-dd05a727fd1c)
 
 
