@@ -10,11 +10,11 @@ COPY DataAccessLayer/ DataAccessLayer/
 COPY EntityLayer/ EntityLayer/
 COPY Jwt_Core_Kampı/ Jwt_Core_Kampı/
 
-# 3️⃣ Bağımlılıkları yükle
+# 3️⃣ Önce bağımlılıkları yükle (cache kullanarak hızlı build)
+WORKDIR /app/CoreDemo1
 RUN dotnet restore
 
 # 4️⃣ Projeyi build et ve publish et
-WORKDIR /app/CoreDemo1
 RUN dotnet publish -c Release -o /out
 
 # 5️⃣ .NET 8 Runtime kullanarak final image oluştur
@@ -22,9 +22,6 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
 COPY --from=build /out ./
 
+# 6️⃣ Render ve Docker için ortam değişkenlerini ayarla
 ENV ASPNETCORE_URLS=http://+:8080
-# 6️⃣ Uygulamayı başlat
-CMD ["dotnet", "CoreDemo1.dll"]
-
-# 7️⃣ Port ayarı (Render ve Docker için)
-EXPOSE 8080
+ENV DATABASE_URL=${DATABASE_URL}  # Render'dan gelen PostgreSQL
