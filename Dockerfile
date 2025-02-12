@@ -18,8 +18,7 @@ WORKDIR /app
 COPY --from=build /out ./
 
 ENV ASPNETCORE_URLS=http://+:8080
-ENV DATABASE_URL=${DATABASE_URL}  # Render'dan gelen PostgreSQL bağlantısı
-
+ENV DATABASE_URL=${DATABASE_URL}  
 CMD ["dotnet", "CoreDemo1.dll"]
 
 EXPOSE 8080
