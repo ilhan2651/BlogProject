@@ -97,8 +97,8 @@ dotnet run
 * **Comment Moderation**: Flag/delete inappropriate comments.
 * **Notification System**: Admins can create and push notifications to authors.
 
-![Admin Panel Example](sandbox:/mnt/data/94039720-c806-46e3-ad94-77dadc2713fd.png)
-
+[![Admin Panel Example](sandbox:/mnt/data/94039720-c806-46e3-ad94-77dadc2713fd.png)
+](https://github.com/ilhan2651/BlogProject/issues/1#issue-2842211605)
 ## 📄 License
 
 This project is developed for educational purposes and is open for improvement and extension.
